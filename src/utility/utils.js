@@ -11,4 +11,16 @@ export const extractAbbreviation = (word) => {
     })
     return join_word.join('')
 }
-export default {extractAbbreviation}
+
+export const truncate = (word, length, suffix) => {
+    if (!word) {
+        return ''
+    }
+    if (word.length > length) {
+        return word.substring(0, length) + suffix;
+    } else {
+        return word;
+    }
+}
+
+export default {extractAbbreviation, truncate}

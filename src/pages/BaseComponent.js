@@ -36,7 +36,8 @@ export const BaseComponent = () => {
             <Outlet/>
             {global.isLoginModal === 'open' &&
             <Modal title={'LOGIN'} width={'w-11/12 md:w-[40%]'} setIsOpen={() => handleClose('login')}
-                   htmlBody={<Login onMessage={onMessage}/>}/>}/>}
+                   htmlBody={<Login onMessage={onMessage}/>}/>}
+
             {global.isRegisterModal === 'open' &&
             <Modal title={'CREATE AN ACCOUNT'} width={'w-11/12 md:w-[40%]'} setIsOpen={() => handleClose('register')}
                    htmlBody={<Register onMessage={onMessage}/>}/>}

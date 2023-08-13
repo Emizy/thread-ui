@@ -11,7 +11,6 @@ function App() {
                 <Route path={'/'} element={<BaseComponent/>}>
                     <Route exact path={'/'} element={<Home/>}/>
                 </Route>
-
             </Routes>
 
         </div>

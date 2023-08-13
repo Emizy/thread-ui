@@ -10,4 +10,13 @@ const onCreatePost = async (payload) => {
         })
     });
 }
-export {onCreatePost}
+const onListPost = async (payload) => {
+    return new Promise((resolve, reject) => {
+        http.get(`${ENDPOINT.POST}${payload.data}`).then(resp => {
+            resolve(resp)
+        }).catch(err => {
+            reject(err)
+        })
+    });
+}
+export {onCreatePost, onListPost}
