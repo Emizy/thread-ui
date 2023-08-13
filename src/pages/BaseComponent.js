@@ -8,6 +8,7 @@ import {toggleLogin, toggleRegister} from "../store/mutation";
 import {message} from 'antd';
 
 export const BaseComponent = () => {
+    const [messageApi, contextHolder] = message.useMessage();
     const {global} = useSelector(state => state)
     const dispatch = useDispatch()
     const handleClose = (type) => {
@@ -21,8 +22,16 @@ export const BaseComponent = () => {
             }))
         }
     }
+    const onMessage = (data) => {
+        messageApi.open({
+            type: data.type,
+            content: data.message,
+            duration: 10,
+        });
+    };
     return (
         <>
+            {contextHolder}
             <Header title={'BiteBlog'}/>
             <Outlet/>
             {global.isLoginModal === 'open' &&
@@ -30,7 +39,7 @@ export const BaseComponent = () => {
                    htmlBody={<Login/>}/>}
             {global.isRegisterModal === 'open' &&
             <Modal title={'CREATE AN ACCOUNT'} width={'w-11/12 md:w-[40%]'} setIsOpen={() => handleClose('register')}
-                   htmlBody={<Register/>}/>}
+                   htmlBody={<Register onMessage={onMessage}/>}/>}
 
         </>
     )

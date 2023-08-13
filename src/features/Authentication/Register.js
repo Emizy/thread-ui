@@ -3,19 +3,37 @@ import {useDispatch} from "react-redux";
 import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import {BiLoaderCircle} from "react-icons/bi";
 import {toggleLogin} from "../../store/mutation";
+import {onRegister} from "../../api/Auth";
+import useErrorFormat from "../../utility/custom-hooks/useErrorFormat";
 
 const FormReducer = (state, action) => {
     switch (action.type) {
+        case 'update-first-name':
+            return {...state, first_name: action.value}
+        case 'update-last-name':
+            return {...state, last_name: action.value}
         case 'update-email':
             return {...state, email: action.value}
         case 'update-password':
             return {...state, password: action.value}
+        case 'update-address':
+            return {...state, address: action.value}
+        case 'reset':
+            return {
+                ...state,
+                first_name: '',
+                last_name: '',
+                email: '',
+                password: '',
+                address: '',
+            }
         default:
             return state
     }
 
 }
-export const Register = () => {
+export const Register = ({onMessage}) => {
+    const [data, handleError] = useErrorFormat()
     const [state, dispatch] = useReducer(FormReducer, {
             first_name: '',
             last_name: '',
@@ -27,12 +45,41 @@ export const Register = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false)
     const dispatcher = useDispatch()
-    const onSubmit = () => {
-
+    const onSubmit = async (e) => {
+        e.preventDefault()
+        for (const [key, value] of Object.entries(state)) {
+            if (!value) {
+                onMessage({
+                    'type': 'error',
+                    'message': `${key.replace('_', ' ')} is required`
+                })
+                return false
+            }
+        }
+        setIsProcessing(true)
+        await onRegister(state).then(resp => {
+            dispatch({'type': 'reset'})
+            onMessage({
+                type: 'success',
+                message: resp.data.message
+            })
+            dispatcher(toggleLogin({
+                status: 'open'
+            }))
+        }).catch(err => {
+            handleError(err)
+            setTimeout(() => {
+                onMessage({
+                    type: 'error',
+                    message: data
+                })
+            }, 100)
+        })
+        setIsProcessing(false)
     }
     return (
         <>
-            <form className={'w-full py-[20px]'} onSubmit={(e) => onSubmit(e)}>
+            <form className={'w-full py-[20px]'}>
                 <div className={'grid grid-cols-1 lg:grid-cols-2 gap-4'}>
                     <div className={'pb-[20px]'}>
                         <label className={'py-[15px] mb-[10px]'}>First Name</label>
@@ -66,7 +113,13 @@ export const Register = () => {
                            className={'w-full mt-[10px] h-[35px] rounded-[3px] pl-[11px] pr-[31px] text-[14px] border outline-none hover:outline-none'}/>
                 </div>
                 <div className={'pb-[20px]'}>
-                    <button type={'submit'} disabled={isProcessing}
+                    <label className={'py-[15px] mb-[10px]'}>Address</label>
+                    <input type={'text'} value={state.address}
+                           onInput={(e) => dispatch({'type': 'update-address', 'value': e.target.value})}
+                           className={'w-full mt-[10px]  rounded-[3px] h-[35px] px-[11px] text-[14px] border outline-none hover:outline-none'}/>
+                </div>
+                <div className={'pb-[20px]'}>
+                    <button type={'submit'} onClick={(e) => onSubmit(e)} disabled={isProcessing}
                             className={'w-full mt-[10px]  rounded-[5px] bg-[#0371E0] text-white h-[35px] text-center flex justify-center px-[10px] text-[15px] border outline-none hover:outline-none'}>
                         {isProcessing === false && <span className={'mt-[6px]'}>
                                             Sign Up

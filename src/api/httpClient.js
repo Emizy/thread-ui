@@ -13,9 +13,10 @@ const http = axios.create({
 http.interceptors.request.use(
     function (req) {
         const token = `${getToken()}`
-        if (token) {
+        if (String(token) !== 'null') {
             req.headers.Authorization = `Bearer ${token}`
         }
+
         return req
     },
     function (err) {

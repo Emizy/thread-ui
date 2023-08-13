@@ -1,3 +1,3 @@
 export const getToken = () => {
-    return window.localStorage.getItem('accessToken')
+    return window.localStorage.getItem('biteToken')
 }
