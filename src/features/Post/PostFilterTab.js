@@ -13,7 +13,7 @@ export const PostFilterTab = ({onFilter, onSearch}) => {
             <div className={'w-full shadow-lg bg-white border rounded-[55px] flex h-[60px]'}>
                 <div className={'w-[60%]'}>
                     <ul className={'flex my-[7px]'}>
-                        <li className={'px-[5px]'}>
+                        <li data-testid={'tab'} className={'px-[5px]'}>
                             <button onClick={() => onChangeTab('all')}
                                     className={`px-[20px] min-w-[60px] font-semibold  text-[15px] rounded-[40px] py-[10px] ${tab === 'all' ? 'bg-[#007bff] border text-white' : 'text-black'}`}>
                                 <p>All</p>
@@ -21,7 +21,7 @@ export const PostFilterTab = ({onFilter, onSearch}) => {
                         </li>
                         {
                             global.isAuthenticated === 'LoggedIn' &&
-                            <li className={'px-[5px]'}>
+                            <li className={'px-[5px]'} data-testid={'tab'}>
                                 <button onClick={() => onChangeTab('personal')}
                                         className={`px-[20px] min-w-[60px] font-semibold  text-[15px] rounded-[40px] py-[10px] ${tab === 'personal' ? 'bg-[#007bff] border text-white' : 'text-black'}`}>
                                     <p>My Post</p>

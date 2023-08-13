@@ -26,7 +26,6 @@ export const Post = () => {
                             [...Array(3)].map((_, key) => {
                                 return <PostCardShimmer key={`shimmer-${key}`}/>
                             })
-
                             }
 
 
