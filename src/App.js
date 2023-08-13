@@ -1,9 +1,13 @@
 import './App.css';
+import {Route, Routes} from "react-router-dom"
+import {Home} from "./pages/Home";
 
 function App() {
     return (
-        <div className="App">
-
+        <div className="App min-h-screen bg-[#ffffff]">
+            <Routes>
+                <Route exact path={'/'} element={<Home/>}/>
+            </Routes>
         </div>
     );
 }
