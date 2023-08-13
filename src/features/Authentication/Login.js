@@ -2,37 +2,72 @@ import {useReducer, useState} from "react";
 import {useDispatch} from "react-redux";
 import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import {BiLoaderCircle} from "react-icons/bi";
-import {toggleRegister} from "../../store/mutation";
-
+import {toggleLogin, toggleRegister, setUpAuth} from "../../store/mutation";
+import useErrorFormat from "../../utility/custom-hooks/useErrorFormat";
+import {onLogin} from "../../api/Auth";
 
 const FormReducer = (state, action) => {
     switch (action.type) {
-        case 'update-email':
-            return {...state, email: action.name}
+        case 'update-username':
+            return {...state, username: action.value}
         case 'update-password':
-            return {...state, password: action.password}
+            return {...state, password: action.value}
+        case 'reset':
+            return {...state, password: '', username: ''}
         default:
             return state
     }
 
 }
-export const Login = () => {
+export const Login = ({onMessage}) => {
+    const [data, handleError] = useErrorFormat()
     const [state, dispatch] = useReducer(FormReducer,
-        {email: '', password: ''}
+        {username: '', password: ''}
     )
     const [isOpen, setIsOpen] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false)
     const dispatcher = useDispatch()
-    const onSubmit = () => {
+    const onSubmit = async (e) => {
+        e.preventDefault()
+        for (const [key, value] of Object.entries(state)) {
+            if (!value) {
+                onMessage({
+                    'type': 'error',
+                    'message': `${key.replace('_', ' ')} is required`
+                })
+                return false
+            }
+        }
+        setIsProcessing(true)
+        await onLogin(state).then(resp => {
+            dispatch({'type': 'reset'})
+            onMessage({
+                type: 'success',
+                message: 'Login successful'
+            })
+            dispatcher(toggleLogin({
+                status: 'close'
+            }))
+            dispatcher(setUpAuth(resp.data))
 
+        }).catch(err => {
+            handleError(err)
+            setTimeout(() => {
+                onMessage({
+                    type: 'error',
+                    message: data
+                })
+            }, 100)
+        })
+        setIsProcessing(false)
     }
     return (
         <>
             <form className={'w-full py-[20px]'} onSubmit={(e) => onSubmit(e)}>
                 <div className={'pb-[20px]'}>
                     <label className={'py-[15px] mb-[10px]'}>Email</label>
-                    <input type={'email'} value={state.value}
-                           onInput={(e) => dispatch({'type': 'update-email', 'email': e.target.value})}
+                    <input type={'email'} value={state.username} data-testid={'email'}
+                           onInput={(e) => dispatch({'type': 'update-username', 'value': e.target.value})}
                            className={'w-full mt-[10px]  rounded-[3px] h-[35px] px-[11px] text-[14px] border outline-none hover:outline-none'}/>
                 </div>
                 <div className={'pb-[20px] relative'}>
@@ -43,12 +78,13 @@ export const Login = () => {
                         {isOpen === true &&
                         <FaRegEyeSlash className={'cursor-pointer'} onClick={() => setIsOpen(false)}/>}
                                     </span>
-                    <input type={`${isOpen === true ? 'text' : 'password'}`} value={state.value}
-                           onInput={(e) => dispatch({'type': 'update-password', 'password': e.target.value})}
+                    <input type={`${isOpen === true ? 'text' : 'password'}`} value={state.password}
+                           data-testid={'password'}
+                           onInput={(e) => dispatch({'type': 'update-password', 'value': e.target.value})}
                            className={'w-full mt-[10px] h-[35px] rounded-[3px] pl-[11px] pr-[31px] text-[14px] border outline-none hover:outline-none'}/>
                 </div>
                 <div className={'pb-[20px]'}>
-                    <button type={'submit'} disabled={isProcessing}
+                    <button type={'submit'} disabled={isProcessing} data-testid={'submit'}
                             className={'w-full mt-[10px]  rounded-[5px] bg-[#0371E0] text-white h-[35px] text-center flex justify-center px-[10px] text-[15px] border outline-none hover:outline-none'}>
                         {isProcessing === false && <span className={'mt-[6px]'}>
                                             Sign in

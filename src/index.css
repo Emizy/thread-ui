@@ -18,7 +18,9 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-
+.custom-upload > .ant-upload{
+    min-width: 50%;
+}
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.2s;

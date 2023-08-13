@@ -4,6 +4,7 @@ export const appState = {
     token: {},
     isLoginModal: 'close',
     isRegisterModal: 'close',
+    isAddPostModal: 'close',
 }
 
 export default appState

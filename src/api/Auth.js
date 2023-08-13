@@ -1,9 +1,13 @@
 import http from "./httpClient";
 import {ENDPOINT} from "../utility/constant";
 
-const onLogin = async () => {
+const onLogin = async (payload) => {
     return new Promise((resolve, reject) => {
-
+        http.post(ENDPOINT.LOGIN, payload).then(resp => {
+            resolve(resp)
+        }).catch(err => {
+            reject(err)
+        })
     });
 }
 

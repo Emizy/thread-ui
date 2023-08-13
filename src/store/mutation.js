@@ -1,4 +1,4 @@
-import {TOGGLE_LOGIN, TOGGLE_REGISTER} from "./types";
+import {SET_CREDENTIALS, TOGGLE_LOGIN, TOGGLE_REGISTER, PURGE_CREDENTIALS, TOGGLE_POST_CREATE_MODAL} from "./types";
 
 const toggleLogin = (payload) => {
     return {
@@ -12,6 +12,22 @@ const toggleRegister = (payload) => {
         payload
     };
 };
+const setUpAuth = (payload) => {
+    return {
+        type: SET_CREDENTIALS,
+        payload
+    }
+}
+const purgeAuth = () => {
+    return {
+        type: PURGE_CREDENTIALS
+    }
+}
+const toggleAddPost = (payload) => {
+    return {
+        type: TOGGLE_POST_CREATE_MODAL,
+        payload
+    }
+}
 
-
-export {toggleLogin,toggleRegister};
+export {toggleLogin, toggleRegister, setUpAuth, purgeAuth, toggleAddPost};

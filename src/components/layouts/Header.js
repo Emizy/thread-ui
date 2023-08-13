@@ -2,16 +2,26 @@ import {NavLink} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
 import {AiOutlineLogout} from "react-icons/ai";
 import {BsPlusCircle} from "react-icons/bs";
-import {toggleLogin} from "../../store/mutation";
+import {toggleLogin, purgeAuth, toggleAddPost} from "../../store/mutation";
+import {extractAbbreviation} from "../../utility/utils";
 
 export const Header = ({title}) => {
     const {global} = useSelector((state) => state)
     const dispatch = useDispatch()
     const onAccess = () => {
-        console.log("am here")
         dispatch(toggleLogin({
             status: 'open'
         }))
+    }
+    const onAddPost = () => {
+        dispatch(toggleAddPost(
+            {
+                status: 'open'
+            }
+        ))
+    }
+    const onLogout = () => {
+        dispatch(purgeAuth())
     }
     return (
         <>
@@ -39,25 +49,25 @@ export const Header = ({title}) => {
                             {global.isAuthenticated === "LoggedIn" &&
                             <ul className={'flex divide-x'}>
                                 <li className={'px-[20px]'}>
-                                    <button
-                                        className={'h-10 bg-[#007bff] px-[30px] w-full flex justify-between rounded-full text-center border flex justify-center py-[7px] font-bold shadow'}>
-                                        <span className={'pr-[20px]'}>ADD POST</span> <BsPlusCircle
+                                    <button onClick={() => onAddPost()}
+                                            className={'h-10 bg-[#007bff] font-medium px-[15px] w-[full] flex justify-between rounded-[5px] text-center border flex justify-center py-[7px] font-bold shadow'}>
+                                        <span className={'pr-[20px]'}>Add Post</span> <BsPlusCircle
                                         className={'text-center text-white w-5 h-5 mt-[2px]'}/>
                                     </button>
                                 </li>
                                 <li className={'px-[20px]'}>
                                     <div className={'flex gap-3'}>
-                                        <p className={'font-semibold py-[10px]'}>Adenitire Ayomikun ...</p>
+                                        <p className={'font-semibold py-[10px] w-[154px] truncate'}>{global.user?.first_name} {global.user?.last_name}...</p>
                                         <div
-                                            className={'w-10 h-10 relative py-[5px] text-center bg-[#007bff] text-white shadow rounded-full font-bold'}>
-                                            AA
+                                            className={'w-10 h-10 relative py-[7px] text-center bg-[#007bff] text-white shadow rounded-full font-bold'}>
+                                            {extractAbbreviation(`${global.user?.first_name} ${global.user?.last_name}`)}
                                         </div>
                                     </div>
                                 </li>
                                 <li className={'px-[20px]'}>
-                                    <button
-                                        className={'w-10 h-10 rounded-full text-center border flex justify-center py-[7px] font-bold bg-white shadow'}>
-                                        <AiOutlineLogout className={'text-center w-6 h-6'}/>
+                                    <button onClick={() => onLogout()}
+                                            className={'w-10 h-10 rounded-full text-center border flex justify-center py-[7px] font-bold bg-red-500 shadow'}>
+                                        <AiOutlineLogout className={'text-center w-6 h-6 text-white'}/>
                                     </button>
                                 </li>
                             </ul>
