@@ -63,7 +63,7 @@ export const Login = ({onMessage}) => {
     }
     return (
         <>
-            <form className={'w-full py-[20px]'} onSubmit={(e) => onSubmit(e)}>
+            <form className={'w-full py-[20px] login-form'} onSubmit={(e) => onSubmit(e)} data-testid={'login-form'}>
                 <div className={'pb-[20px]'}>
                     <label className={'py-[15px] mb-[10px]'}>Email</label>
                     <input type={'email'} value={state.username} data-testid={'email'}

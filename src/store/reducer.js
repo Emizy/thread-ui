@@ -6,7 +6,7 @@ import {
     TOGGLE_LOGIN,
     TOGGLE_REGISTER,
     TOGGLE_POST_CREATE_MODAL,
-    TOGGLE_POST_EDIT_MODAL
+    TOGGLE_POST_EDIT_MODAL, TEST_LOGIN
 } from "./types";
 
 export const reducer = (state = appState, action) => {
@@ -26,6 +26,10 @@ export const reducer = (state = appState, action) => {
                 isAuthenticated: 'LoggedIn',
                 token: action.payload.token,
                 user: action.payload.data
+            }
+        case TEST_LOGIN:
+            return {
+                ...state, isAuthenticated: 'LoggedIn'
             }
         case TOGGLE_LOGIN:
             return {

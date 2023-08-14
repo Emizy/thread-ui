@@ -7,7 +7,7 @@ import {toggleLogin, purgeAuth, toggleAddPost} from "../../store/mutation";
 import {extractAbbreviation} from "../../utility/utils";
 
 export const Header = ({title}) => {
-    const {global} = useSelector((state) => state)
+    const global = useSelector((state) => state.global)
     const dispatch = useDispatch()
     const location = useLocation()
     const onAccess = () => {
@@ -49,7 +49,7 @@ export const Header = ({title}) => {
                     <div className={'w-[60%] relative'}>
                         <div className={'py-[25px] flex justify-end relative'}>
                             {global.isAuthenticated === "LoggedIn" &&
-                            <ul className={'flex divide-x'}>
+                            <ul className={'flex divide-x authenticated-panel'} data-testid={'is-authenticated'}>
                                 {location?.pathname === '/' &&
                                 <li className={'px-[20px]'}>
                                     <button onClick={() => onAddPost()}
@@ -80,7 +80,7 @@ export const Header = ({title}) => {
                             {global.isAuthenticated === "notLoggedIn" &&
                             <ul className={'flex'}>
                                 <li className={'px-[20px]'}>
-                                    <button onClick={() => onAccess()}
+                                    <button onClick={() => onAccess()} data-testid={'btn-access'}
                                             className={'bg-[#fff] border-[#007bff] border text-[#007bff] flex  cursor-pointer py-[10px] px-[30px]' +
                                             ' font-semibold  rounded-[22px] hover:bg-[#007bff] hover:text-[#fff] text-[15px] shadow-lg'}>
                                         Get Access

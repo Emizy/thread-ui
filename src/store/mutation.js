@@ -4,7 +4,8 @@ import {
     TOGGLE_REGISTER,
     PURGE_CREDENTIALS,
     TOGGLE_POST_CREATE_MODAL,
-    TOGGLE_POST_EDIT_MODAL
+    TOGGLE_POST_EDIT_MODAL,
+    TEST_LOGIN
 } from "./types";
 
 const toggleLogin = (payload) => {
@@ -42,5 +43,9 @@ const toggleEditPost = (payload) => {
         payload
     }
 }
-
-export {toggleLogin, toggleRegister, setUpAuth, purgeAuth, toggleAddPost, toggleEditPost};
+const testLogin = () => {
+    return {
+        type: TEST_LOGIN
+    }
+}
+export {toggleLogin, toggleRegister, setUpAuth, purgeAuth, toggleAddPost, toggleEditPost, testLogin};

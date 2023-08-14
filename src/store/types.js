@@ -5,3 +5,4 @@ export const TOGGLE_REGISTER = "TOGGLE_REGISTER";
 export const TOGGLE_POST_CREATE_MODAL = "TOGGLE_POST_CREATE_MODAL";
 export const TOGGLE_POST_EDIT_MODAL = "TOGGLE_POST_EDIT_MODAL";
 export const LOGGEDIN = "LoggedIn";
+export const TEST_LOGIN = 'LoggedIn'
