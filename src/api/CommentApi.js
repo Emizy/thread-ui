@@ -12,7 +12,16 @@ const onCreateComment = async (payload) => {
 }
 const onUpdateComment = async (payload) => {
     return new Promise((resolve, reject) => {
-        http.put(`${ENDPOINT.COMMENT}${payload.id}`, payload.data).then(resp => {
+        http.put(`${ENDPOINT.COMMENT}${payload.id}/`, payload.data).then(resp => {
+            resolve(resp)
+        }).catch(err => {
+            reject(err)
+        })
+    });
+}
+const onDeleteComment = async (commentId) => {
+    return new Promise((resolve, reject) => {
+        http.delete(`${ENDPOINT.COMMENT}${commentId}/`).then(resp => {
             resolve(resp)
         }).catch(err => {
             reject(err)
@@ -28,4 +37,4 @@ const onListComment = async (payload) => {
         })
     });
 }
-export {onListComment, onCreateComment}
+export {onListComment, onCreateComment, onUpdateComment, onDeleteComment}

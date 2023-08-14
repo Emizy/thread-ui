@@ -7,7 +7,7 @@ import {Comment} from "./Comment";
 
 export const Comments = ({post, userId}) => {
     const dispatcher = useDispatch()
-    const {comment} = useSelector(state => state)
+    const commentData = useSelector(state => state.commentData)
     const [loading, setLoading] = useState(true)
     const handleSubmit = (text) => {
         console.log("am here for it", text)
@@ -17,12 +17,12 @@ export const Comments = ({post, userId}) => {
             resp.data.data.results.map(item => {
                 item.open = false
             })
-            let results = resp.data.data.results.filter(item => item.parent_comment_id == null)
+            let results = resp.data.data.results.filter(item => item.parent_comment_id === null)
             let comment_replies = resp.data.data.results.filter(item => item.parent_comment_id !== null)
+            comment_replies.sort((a, b) =>
+                new Date(a?.timestamp).getTime() - new Date(b?.timestamp).getTime())
             dispatcher(setComments({
-                comments: results
-            }))
-            dispatcher(setCommentsReplies({
+                comments: results,
                 commentsReplies: comment_replies
             }))
 
@@ -47,8 +47,8 @@ export const Comments = ({post, userId}) => {
                 <hr className={'my-[20px]'}/>
                 <div className={'grid grid-cols-1 gap-6 w-full divide-y my[20px]'} data-testid={'comments'}>
                     {
-                        comment.comments.length > 0 &&
-                        comment.comments.map(comment => {
+                        commentData.comments.length > 0 &&
+                        commentData.comments.map(comment => {
                             return <Comment
                                 key={comment.id}
                                 comment={comment}
@@ -58,7 +58,7 @@ export const Comments = ({post, userId}) => {
                     }
 
                 </div>
-                {comment.comments.length === 0 &&
+                {commentData.comments.length === 0 &&
                 <div className={'w-full'}>
                     <div className={'w-[50%] mx-auto'}>
                         <div className={'flex gap-6 justify-center my-[20px]'}>

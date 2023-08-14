@@ -1,9 +1,14 @@
 export const SET_COMMENTS = "SET_COMMENTS";
 export const SET_COMMENTS_REPLIES = "SET_COMMENTS_REPLIES";
+export const ADD_COMMENT = 'ADD_COMMENT'
+export const ADD_COMMENT_REPLY = 'ADD_COMMENT_REPLY'
 export const UPDATE_COMMENT = 'UPDATE_COMMENT'
+export const DELETE_COMMENT = 'DELETE_COMMENT'
+export const DELETE_COMMENT_REPLY = 'DELETE_COMMENT_REPLY'
 export const UPDATE_COMMENT_REPLY = 'UPDATE_COMMENT_REPLY'
 export const REMOVE_COMMENT = 'REMOVE_COMMENT'
 export const REMOVE_COMMENT_REPLY = 'REMOVE_COMMENT_REPLY'
 export const TO_CREATE_BASE_COMMENT = 'create_base_comment'
+export const TO_CREATE_REPLY = 'create_reply'
 export const TO_CREATE_COMMENT = 'create_base_comment'
-export const TO_EDIT = 'update'
+export const TO_EDIT = 'update_comment'

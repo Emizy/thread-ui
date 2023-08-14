@@ -1,12 +1,21 @@
 import {useState} from "react";
-import {TO_CREATE_BASE_COMMENT, TO_EDIT} from "../../../store/comment/types";
-import {onCreateComment} from "../../../api/CommentApi";
+import {TO_CREATE_BASE_COMMENT, TO_EDIT, TO_CREATE_REPLY} from "../../../store/comment/types";
+import {onCreateComment, onUpdateComment} from "../../../api/CommentApi";
 import useErrorFormat from "../../../utility/custom-hooks/useErrorFormat";
 import {message} from 'antd';
 import {useDispatch} from "react-redux";
-import {updateComment} from "../../../store/comment/mutation";
+import {updateComment, addComment, addCommentReply} from "../../../store/comment/mutation";
 
-export const CommentForm = ({postId, btnLabel, handleSubmit, commentId, actionType, initialText = ''}) => {
+export const CommentForm = ({
+                                postId,
+                                btnLabel,
+                                handleSubmit,
+                                commentId,
+                                parentCommentId,
+                                actionType,
+                                initialText = '',
+                                handleClose
+                            }) => {
     const dispatcher = useDispatch()
     const [text, setText] = useState(initialText)
     const isTextDisabled = text.length === 0
@@ -23,7 +32,7 @@ export const CommentForm = ({postId, btnLabel, handleSubmit, commentId, actionTy
         if (actionType === TO_CREATE_BASE_COMMENT) {
             onCreateComment(payload).then(resp => {
                 let comment = {...resp.data.data, open: false}
-                dispatcher(updateComment(comment))
+                dispatcher(addComment(comment))
             }).catch(err => {
                 handleError(err)
                 setTimeout(() => {
@@ -34,8 +43,57 @@ export const CommentForm = ({postId, btnLabel, handleSubmit, commentId, actionTy
                     });
                 }, 120)
             })
+            setText('')
+        } else if (actionType === TO_EDIT) {
+            if (parentCommentId) {
+                payload['parent_comment_id'] = parentCommentId
+            }
+            onUpdateComment({
+                data: payload,
+                id: commentId
+            }).then(resp => {
+                let comment = {...resp.data.data, open: false}
+                dispatcher(updateComment(comment))
+                handleClose()
+            }).catch(err => {
+                handleError(err)
+                setTimeout(() => {
+                    messageApi.open({
+                        type: 'error',
+                        content: data,
+                        duration: 10,
+                    });
+                }, 120)
+            })
+        } else if (actionType === TO_CREATE_REPLY) {
+            console.log(parentCommentId)
+            if (!parentCommentId) {
+                messageApi.open({
+                    type: 'error',
+                    content: 'Your reply could not be submitted,Try again',
+                    duration: 10
+                })
+                return false
+            }
+            payload['parent_comment_id'] = parentCommentId
+            onCreateComment(payload).then(resp => {
+                let comment = {...resp.data.data, open: false}
+                console.log("am her for it", comment)
+                dispatcher(addCommentReply(comment))
+                handleClose()
+            }).catch(err => {
+                handleError(err)
+                setTimeout(() => {
+                    messageApi.open({
+                        type: 'error',
+                        content: data,
+                        duration: 10,
+                    });
+                }, 120)
+            })
+            setText('')
         }
-        setText('')
+
         setProcessing(false)
     }
     return (
@@ -47,21 +105,30 @@ export const CommentForm = ({postId, btnLabel, handleSubmit, commentId, actionTy
                       value={text}
                       onChange={(e) => setText(e.target.value)}
                   />
-                <button disabled={isTextDisabled | processing}
-                        className={'py-[5px] text-[13px] rounded-[2px] font-medium px-[15px] flex justify-center text-white bg-[#0371E0]'}>
-                    {processing === false && btnLabel}
-                    {processing === true &&
-                    <p className={'flex justify-center'}>
-                        <svg className="animate-spin -ml-1  h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
-                             fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    strokeWidth="4"/>
-                            <path className="opacity-75" fill="currentColor"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                        </svg>
-                    </p>
+                <div className={'flex gap-3'}>
+                    <button disabled={isTextDisabled | processing}
+                            className={'py-[5px] text-[13px] rounded-[2px] font-medium px-[15px] flex justify-center text-white bg-[#0371E0]'}>
+                        {processing === false && btnLabel}
+                        {processing === true &&
+                        <p className={'flex justify-center'}>
+                            <svg className="animate-spin -ml-1  h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                                 fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        strokeWidth="4"/>
+                                <path className="opacity-75" fill="currentColor"
+                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                            </svg>
+                        </p>
+                        }
+                    </button>
+                    {
+                        commentId &&
+                        <button disabled={processing} type={'button'} onClick={() => handleClose()}
+                                className={'py-[5px] text-[13px] rounded-[2px] font-medium px-[15px] flex justify-center text-white bg-red-500'}>
+                            Close
+                        </button>
                     }
-                </button>
+                </div>
             </form>
         </>
     )

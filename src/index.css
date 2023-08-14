@@ -18,12 +18,18 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-.custom-upload > .ant-upload{
+.custom-upload > .ant-upload {
     min-width: 50%;
 }
+
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.2s;
+}
+
+.ant-btn-primary {
+    background: #007bff;
+    color: #ffffff;
 }
 
 .fade-enter,

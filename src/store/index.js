@@ -21,7 +21,7 @@ const persistConfig = {
 
 const combine_reducer = combineReducers({
     global: reducer,
-    comment: commentReducer
+    commentData: commentReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, combine_reducer)
