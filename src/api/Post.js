@@ -28,4 +28,22 @@ const getPost = async (postId) => {
         })
     });
 }
-export {onCreatePost, onListPost, getPost}
+const deletePostApi = async (postId) => {
+    return new Promise((resolve, reject) => {
+        http.delete(`${ENDPOINT.POST}${postId}/`).then(resp => {
+            resolve(resp)
+        }).catch(err => {
+            reject(err)
+        })
+    });
+}
+const updatePostApi = async (payload) => {
+    return new Promise((resolve, reject) => {
+        http.put(`${ENDPOINT.POST}${payload.id}/`, payload.data, {headers: {'Content-Type': 'multipart/form-data'}}).then(resp => {
+            resolve(resp)
+        }).catch(err => {
+            reject(err)
+        })
+    });
+}
+export {onCreatePost, onListPost, getPost, deletePostApi, updatePostApi}

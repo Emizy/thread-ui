@@ -5,6 +5,7 @@ export const appState = {
     isLoginModal: 'close',
     isRegisterModal: 'close',
     isAddPostModal: 'close',
+    isEditPostModal: 'close',
 }
 
 export default appState

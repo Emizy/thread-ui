@@ -72,7 +72,7 @@ export const CommentForm = ({
         setProcessing(false)
     }
     useEffect(() => {
-        if (data !== '' && data?.length  > 0) {
+        if (data !== '' && data?.length > 0) {
             messageApi.open({
                 type: 'error',
                 content: data,

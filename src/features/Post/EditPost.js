@@ -1,11 +1,11 @@
-import {useEffect, useReducer, useState} from "react";
-import {BiLoaderCircle} from "react-icons/bi";
-import {Upload} from 'antd';
-import {onCreatePost} from "../../api/Post";
 import useErrorFormat from "../../utility/custom-hooks/useErrorFormat";
 import {useDispatch} from "react-redux";
-import {toggleAddPost} from "../../store/mutation";
-import {addPost} from "../../store/post/mutation";
+import {useEffect, useReducer, useState} from "react";
+import {updatePostApi} from "../../api/Post";
+import {toggleEditPost} from "../../store/mutation";
+import {updatePost} from "../../store/post/mutation";
+import {Upload} from "antd";
+import {BiLoaderCircle} from "react-icons/bi";
 
 const FormReducer = (state, action) => {
     switch (action.type) {
@@ -22,12 +22,16 @@ const FormReducer = (state, action) => {
                 description: '',
                 publish: false
             }
+        case 'populate':
+            return {
+                ...state, ...action.data
+            }
         default:
             return state
     }
 
 }
-export const AddPost = ({onMessage}) => {
+export const EditPost = ({post, onMessage, handleClear}) => {
     const [data, handleError] = useErrorFormat('')
     const dispatcher = useDispatch()
     const [isProcessing, setIsProcessing] = useState(false)
@@ -58,6 +62,7 @@ export const AddPost = ({onMessage}) => {
     };
     const onSubmit = async (e) => {
         e.preventDefault()
+        let formData = new FormData()
         if (!state.title) {
             onMessage({
                 type: 'error',
@@ -72,32 +77,24 @@ export const AddPost = ({onMessage}) => {
             })
             return
         }
-        if (fileList.length < 1) {
-            onMessage({
-                type: 'error',
-                message: 'Kindly upload post image'
-            })
-            return false
+        if (fileList.length > 0) {
+            formData.append('image', fileList[0])
         }
-        let formData = new FormData()
-        formData.append('image', fileList[0])
         formData.append('title', state.title)
         formData.append('description', state.description)
         formData.append('publish', state.publish)
         setIsProcessing(true)
-        await onCreatePost(formData).then(resp => {
-            dispatch({
-                type: 'reset'
-            })
+        await updatePostApi({id: post?.id, data: formData}).then(resp => {
             setFileList([])
-            dispatcher(toggleAddPost({
-                status: 'close'
-            }))
-            dispatcher(addPost(resp.data.data))
+            handleClear()
+            dispatcher(updatePost(resp.data.data))
             onMessage({
                 type: 'success',
-                message: 'Post created'
+                message: 'Post updated'
             })
+            dispatcher(toggleEditPost({
+                status: 'close'
+            }))
         }).catch(err => {
             handleError(err)
         })
@@ -112,6 +109,20 @@ export const AddPost = ({onMessage}) => {
             handleError('')
         }
     }, [data])
+    useEffect(() => {
+        let payload = {
+            title: post?.title,
+            description: post?.description,
+            publish: post?.publish,
+        }
+        if (post?.id) {
+            dispatch({
+                type: 'populate',
+                data: payload
+            })
+        }
+
+    }, [post])
     return (
         <>
             <form className={'w-full py-[20px]'}>
@@ -151,7 +162,7 @@ export const AddPost = ({onMessage}) => {
                     <button type={'button'} onClick={(e) => onSubmit(e)}
                             className={'w-full mt-[10px]  rounded-[5px] bg-[#0371E0] text-white h-[35px] text-center flex justify-center px-[10px] text-[15px] border outline-none hover:outline-none'}>
                         {isProcessing === false && <span className={'mt-[6px]'}>
-                                           CREATE POST
+                                           UPDATE POST
                                         </span>}
                         {isProcessing === true &&
                         <span className={'mt-[6px]'}><BiLoaderCircle
@@ -162,4 +173,5 @@ export const AddPost = ({onMessage}) => {
 
         </>
     )
+
 }

@@ -37,8 +37,8 @@ export const Comments = ({post, userId}) => {
                 <hr className={'my-[20px]'}/>
                 <div className={'grid grid-cols-1 gap-6 w-full divide-y my[20px]'} data-testid={'comments'}>
                     {
-                        commentData.comments.length > 0 &&
-                        commentData.comments.map(comment => {
+                        commentData?.comments?.length > 0 &&
+                        commentData?.comments?.map(comment => {
                             return <Comment
                                 key={comment.id}
                                 comment={comment}
@@ -48,7 +48,7 @@ export const Comments = ({post, userId}) => {
                     }
 
                 </div>
-                {commentData.comments.length === 0 &&
+                {commentData?.comments?.length === 0 &&
                 <div className={'w-full'}>
                     <div className={'w-[50%] mx-auto'}>
                         <EmptyComponent text={'No comments available'}/>

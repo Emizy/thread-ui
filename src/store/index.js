@@ -10,18 +10,20 @@ import {
 } from "redux-persist";
 import {reducer} from "./reducer";
 import {commentReducer} from "./comment/reducer";
+import {postReducer} from "./post/reducer";
 
 const persistConfig = {
     key: 'root',
     version: 1,
     storage,
-    blacklist: ['comment']
+    blacklist: ['commentData', 'postData']
 
 }
 
 const combine_reducer = combineReducers({
     global: reducer,
-    commentData: commentReducer
+    commentData: commentReducer,
+    postData: postReducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, combine_reducer)

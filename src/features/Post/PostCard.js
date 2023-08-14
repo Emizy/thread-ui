@@ -2,13 +2,44 @@ import {SlCalender} from "react-icons/sl";
 import {FaRegCommentAlt} from "react-icons/fa";
 import {truncate} from "../../utility/utils";
 import moment from "moment";
+import {Popconfirm} from "antd";
+import {useSelector, useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
-export const PostCard = ({post, title_count = 23, caption_count = 160}) => {
+import {LOGGEDIN} from "../../store/types";
+import {AiOutlineDelete, AiOutlineEdit} from "react-icons/ai";
+import {deletePost} from "../../store/post/mutation";
+import {deletePostApi} from "../../api/Post";
+import useErrorFormat from "../../utility/custom-hooks/useErrorFormat";
+import {useEffect} from "react";
 
+export const PostCard = ({post, title_count = 23, caption_count = 160, onMessage, handleEdit}) => {
+    const global = useSelector(state => state.global)
+    const dispatcher = useDispatch()
+    const [data, handleError] = useErrorFormat('')
+    const canAction = global.isAuthenticated === LOGGEDIN && post?.user?.id === global?.user.id
     const navigate = useNavigate()
     const goTo = (url) => {
         navigate(url)
     }
+    const handleDelete = () => {
+        deletePostApi(post?.id).then(() => {
+            dispatcher(deletePost(post?.id))
+        }).catch(err => {
+            handleError(err)
+        })
+    }
+    const onEdit = () => {
+        handleEdit(post)
+    }
+    useEffect(() => {
+        if (data !== '' && data?.length > 0) {
+            onMessage({
+                type: 'error',
+                message: data,
+            });
+            handleError('')
+        }
+    }, [data])
     return (
         <>
             <div className={'h-[500px]'}>
@@ -46,6 +77,31 @@ export const PostCard = ({post, title_count = 23, caption_count = 160}) => {
                                 Comment{post?.total_comments > 1 ? 's' : ''} ({post?.total_comments})
                             </p>
                         </div>
+                        {canAction === true &&
+                        <div className={'flex gap-3 py-[10px]'}>
+                            <ul className={'flex gap-3'}>
+                                <li className={'pr-[5px]'}>
+                                    <span className={'cursor-pointer'} onClick={() => onEdit()}>
+                                        <AiOutlineEdit className={'text-[#0371E0]'}/>
+                                    </span>
+                                </li>
+                                <li className={'pr-[5px]'}>
+                                    <Popconfirm
+                                        title="Delete the post"
+                                        description="Are you sure to delete this post?"
+                                        onConfirm={handleDelete}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
+                                        <div className={'cursor-pointer'}>
+                                            <AiOutlineDelete className={'text-red-500'}/>
+                                        </div>
+                                    </Popconfirm>
+                                </li>
+                            </ul>
+                        </div>
+                        }
+
                     </div>
                 </div>
             </div>

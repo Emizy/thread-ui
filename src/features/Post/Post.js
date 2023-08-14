@@ -3,27 +3,35 @@ import {PostCard} from "./PostCard";
 import {PostCardShimmer} from "./PostCardShimmer";
 import {useSelector, useDispatch} from "react-redux";
 import {useEffect, useState} from "react";
-import {toggleAddPost} from "../../store/mutation";
+import {toggleAddPost, toggleEditPost} from "../../store/mutation";
 import {Drawer, message, Pagination} from 'antd';
 import {AddPost} from "./AddPost";
 import {onListPost} from "../../api/Post";
+import {setPosts} from "../../store/post/mutation";
+import {TOTAL_DISPLAY_POST} from "../../utility/constant";
+import useErrorFormat from "../../utility/custom-hooks/useErrorFormat";
+import {EmptyComponent} from "../../components/EmptyComponent";
+import {EditPost} from "./EditPost";
 
 export const Post = () => {
-    const {global} = useSelector(state => state)
+    const global = useSelector(state => state.global)
+    const postData = useSelector(state => state.postData)
+    const [data, handleError] = useErrorFormat('')
     const [tab, setTab] = useState('all')
     const [search, setSearch] = useState('')
+    const [currentPost, setCurrentPost] = useState({})
     const [current, setCurrent] = useState(1)
-    const [posts, setPosts] = useState({
-        results: [],
-        page: 1,
-        total: 1,
-        total_pages: 1
-    })
     const dispatcher = useDispatch()
     const [messageApi, contextHolder] = message.useMessage();
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const onSearch = (search) => {
         console.log(search)
+    }
+    const handleEdit = (post) => {
+        setCurrentPost(JSON.parse(JSON.stringify(post)))
+    }
+    const handleClear = () => {
+        setCurrentPost({})
     }
     const onMessage = (data) => {
         messageApi.open({
@@ -33,26 +41,31 @@ export const Post = () => {
         });
     };
     const onClose = () => {
+        setCurrentPost({})
         dispatcher(toggleAddPost({
+            status: 'close'
+        }))
+        dispatcher(toggleEditPost({
             status: 'close'
         }))
     }
     const onFetchPost = (query) => {
         setIsLoading(true)
         onListPost({data: query}).then(res => {
-            setPosts({
-                results: res.data.data.results,
+            dispatcher(setPosts({
+                posts: res.data.data.results,
                 total: res.data.data.total,
                 total_pages: res.data.data.total_pages,
                 page: res.data.data.page,
-            })
-        }).then(err => {
-
+            }))
+        }).catch(err => {
+            handleError(err)
         })
         setIsLoading(false)
     }
     useEffect(() => {
-        let query = `?limit=3&page=${current}`
+        setIsLoading(true)
+        let query = `?limit=${TOTAL_DISPLAY_POST}`
         if (tab === 'personal') {
             query += `&user__id=${global?.user?.id}`
         }
@@ -60,9 +73,37 @@ export const Post = () => {
             query += `&search=${search}`
         }
         onFetchPost(query)
-    }, [tab, search, current])
+    }, [tab, search])
     useEffect(() => {
-        onFetchPost('?limit=3')
+        setIsLoading(true)
+        let query = `?limit=${TOTAL_DISPLAY_POST}&page=${current}`
+        if (tab === 'personal') {
+            query += `&user__id=${global?.user?.id}`
+        }
+        if (search) {
+            query += `&search=${search}`
+        }
+        onFetchPost(query)
+    }, [current])
+    useEffect(() => {
+        if (data !== '' && data?.length > 0) {
+            messageApi.open({
+                type: 'error',
+                content: data,
+                duration: 10,
+            });
+            handleError('')
+        }
+    }, [data])
+    useEffect(() => {
+        if (currentPost?.id) {
+            dispatcher(toggleEditPost({
+                status: 'open'
+            }))
+        }
+    }, [currentPost])
+    useEffect(() => {
+        onFetchPost(`?limit=${TOTAL_DISPLAY_POST}`)
     }, [])
     return (
         <>
@@ -75,6 +116,7 @@ export const Post = () => {
                     </div>
                     <div className={'w-full py-[40px]'}>
                         <div className={'grid grid-cols-1 lg:grid-cols-3 gap-[40px]'}>
+
                             {isLoading === true &&
                             [...Array(3)].map((_, key) => {
                                 return <PostCardShimmer key={`shimmer-${key}`}/>
@@ -82,15 +124,23 @@ export const Post = () => {
                             }
 
                             {isLoading === false &&
-                            posts.results?.map((blog, key) => {
-                                return <PostCard key={`blog_${key}`} post={blog}
-                                                 caption_count={244} title_count={70}/>
+                            postData?.posts?.map((blog, key) => {
+                                return <PostCard key={`blog-${key}`} post={blog}
+                                                 caption_count={244} title_count={70} onMessage={onMessage}
+                                                 handleEdit={handleEdit}/>
                             })
                             }
-
                         </div>
+                        {postData?.posts?.length === 0 &&
+                        <div className={'w-full'}>
+                            <div className={'w-[50%] mx-auto'}>
+                                <EmptyComponent text={'No posts available'}/>
+
+                            </div>
+                        </div>
+                        }
                         <div className={'mt-[40px] flex justify-center'}>
-                            <Pagination defaultCurrent={1} total={posts.total} pageSize={3} onChange={setCurrent}
+                            <Pagination defaultCurrent={1} total={postData.total} pageSize={3} onChange={setCurrent}
                                         responsive={true}/>
                         </div>
                     </div>
@@ -106,6 +156,17 @@ export const Post = () => {
                 }}
             >
                 <AddPost onMessage={onMessage}/>
+            </Drawer>
+            <Drawer
+                title="UPDATE POST"
+                width={720}
+                onClose={onClose}
+                open={global.isEditPostModal === 'open'}
+                bodyStyle={{
+                    paddingBottom: 80,
+                }}
+            >
+                <EditPost post={currentPost} onMessage={onMessage} handleClear={handleClear}/>
             </Drawer>
         </>
     )
