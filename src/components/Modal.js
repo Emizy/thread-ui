@@ -9,11 +9,13 @@ export const Modal = ({title, width, setIsOpen, htmlBody}) => {
                 <div className={`${width ? width : 'w-11/12 md:w-1/3'} modal modal-custom__dialog`}>
                     <div className={'modalHeader'}>
                         <div className="flex justify-between items-start sticky-border">
-                            <h3 className={`${title ? 'px-6 pt-2' : 'p-2'} text-xl font-semibold text-gray-500`}>
+                            <h3 className={`${title ? 'px-6 pt-2' : 'p-2'} text-xl font-semibold text-gray-500`}
+                                data-testid={'modal-title'}>
                                 {title}
                             </h3>
                             <div className="flex align-items-center">
-                                <button className="p-3 leading-none" onClick={() => setIsOpen(false)}>
+                                <button className="p-3 leading-none" onClick={() => setIsOpen(false)}
+                                        data-testid={'modal-close-btn'}>
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                          className="h-7 w-7 bg-gray-500 text-white border-2 rounded-full p-1"
                                          viewBox="0 0 20 20" fill="currentColor">
@@ -26,7 +28,7 @@ export const Modal = ({title, width, setIsOpen, htmlBody}) => {
                         </div>
                     </div>
 
-                    <div className="modal-custom__body px-[20px] py-[20px]">
+                    <div className="modal-custom__body px-[20px] py-[20px]" data-testid={'modal-body'}>
                         {htmlBody}
                     </div>
                 </div>

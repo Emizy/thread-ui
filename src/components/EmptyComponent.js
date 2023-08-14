@@ -17,7 +17,7 @@ export const EmptyComponent = ({text}) => {
                                 d="M14.5 13C14.5 13.5523 14.0523 14 13.5 14C12.9477 14 12.5 13.5523 12.5 13C12.5 12.4477 12.9477 12 13.5 12C14.0523 12 14.5 12.4477 14.5 13Z"
                                 fill="#1C274C"/>
                         </svg></span>
-                <p className={'text-[15px] font-semibold mt-[15px]'}>{text}</p>
+                <p className={'text-[15px] font-semibold mt-[15px]'} data-testid={'empty-text'}>{text}</p>
             </div>
         </>
     )
