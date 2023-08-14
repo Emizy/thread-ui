@@ -2,12 +2,14 @@ import {NavLink} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
 import {AiOutlineLogout} from "react-icons/ai";
 import {BsPlusCircle} from "react-icons/bs";
+import {useLocation} from "react-router-dom";
 import {toggleLogin, purgeAuth, toggleAddPost} from "../../store/mutation";
 import {extractAbbreviation} from "../../utility/utils";
 
 export const Header = ({title}) => {
     const {global} = useSelector((state) => state)
     const dispatch = useDispatch()
+    const location = useLocation()
     const onAccess = () => {
         dispatch(toggleLogin({
             status: 'open'
@@ -48,6 +50,7 @@ export const Header = ({title}) => {
                         <div className={'py-[25px] flex justify-end relative'}>
                             {global.isAuthenticated === "LoggedIn" &&
                             <ul className={'flex divide-x'}>
+                                {location?.pathname === '/' &&
                                 <li className={'px-[20px]'}>
                                     <button onClick={() => onAddPost()}
                                             className={'h-10 bg-[#007bff] font-medium px-[15px] w-[full] flex justify-between rounded-[5px] text-center border flex justify-center py-[7px] font-bold shadow'}>
@@ -55,6 +58,8 @@ export const Header = ({title}) => {
                                         className={'text-center text-white w-5 h-5 mt-[2px]'}/>
                                     </button>
                                 </li>
+                                }
+
                                 <li className={'px-[20px]'}>
                                     <div className={'flex gap-3'}>
                                         <p className={'font-semibold py-[10px] w-[154px] truncate'}>{global.user?.first_name} {global.user?.last_name}...</p>

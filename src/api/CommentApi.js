@@ -1,31 +1,31 @@
 import http from "./httpClient";
 import {ENDPOINT} from "../utility/constant";
 
-const onCreatePost = async (payload) => {
+const onCreateComment = async (payload) => {
     return new Promise((resolve, reject) => {
-        http.post(ENDPOINT.POST, payload, {headers: {'Content-Type': 'multipart/form-data'}}).then(resp => {
+        http.post(`${ENDPOINT.COMMENT}`, payload).then(resp => {
             resolve(resp)
         }).catch(err => {
             reject(err)
         })
     });
 }
-const onListPost = async (payload) => {
+const onUpdateComment = async (payload) => {
     return new Promise((resolve, reject) => {
-        http.get(`${ENDPOINT.POST}${payload.data}`).then(resp => {
+        http.put(`${ENDPOINT.COMMENT}${payload.id}`, payload.data).then(resp => {
             resolve(resp)
         }).catch(err => {
             reject(err)
         })
     });
 }
-const getPost = async (postId) => {
+const onListComment = async (payload) => {
     return new Promise((resolve, reject) => {
-        http.get(`${ENDPOINT.POST}${postId}/`).then(resp => {
+        http.get(`${ENDPOINT.COMMENT}?post__id=${payload.postId}`).then(resp => {
             resolve(resp)
         }).catch(err => {
             reject(err)
         })
     });
 }
-export {onCreatePost, onListPost, getPost}
+export {onListComment, onCreateComment}

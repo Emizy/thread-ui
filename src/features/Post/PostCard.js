@@ -2,8 +2,13 @@ import {SlCalender} from "react-icons/sl";
 import {FaRegCommentAlt} from "react-icons/fa";
 import {truncate} from "../../utility/utils";
 import moment from "moment";
-
+import {useNavigate} from "react-router-dom";
 export const PostCard = ({post, title_count = 23, caption_count = 160}) => {
+
+    const navigate = useNavigate()
+    const goTo = (url) => {
+        navigate(url)
+    }
     return (
         <>
             <div className={'h-[500px]'}>
@@ -19,7 +24,8 @@ export const PostCard = ({post, title_count = 23, caption_count = 160}) => {
                     <div className={'w-full h-[132px]'}>
                         <p className={'font-normal py-[10px] text-[15px]'}>
                             {truncate(post?.description, caption_count, '...')} <span
-                            className={'text-[#007bff] text-italic cursor-pointer'}>Read More</span>
+                            className={'text-[#007bff] text-italic cursor-pointer'}
+                            onClick={() => goTo(`/blog/${post?.id}/${post?.slug}`)}>Read More</span>
                         </p>
                     </div>
                     <hr/>

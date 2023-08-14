@@ -30,7 +30,7 @@ export default function useErrorFormat() {
                 }
             }
         } else if (error.response.status === 401) {
-            setData('session-timeout')
+            setData(error.response.data.message)
         } else {
             setData('Something went wrong while processing your request')
         }

@@ -1,6 +1,7 @@
 import './App.css';
 import {Route, Routes} from "react-router-dom"
 import {Home} from "./pages/Home";
+import {PostDetail} from "./features/Post/PostDetail";
 import {BaseComponent} from "./pages/BaseComponent";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
             <Routes>
                 <Route path={'/'} element={<BaseComponent/>}>
                     <Route exact path={'/'} element={<Home/>}/>
+                    <Route exact path={'/blog/:identifier/:slug'} element={<PostDetail/>}/>
                 </Route>
             </Routes>
 
