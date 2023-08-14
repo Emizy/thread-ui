@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {CommentForm} from "./CommentForm";
 import {message, Popconfirm} from "antd";
@@ -34,16 +34,19 @@ export const Comment = ({comment, userId}) => {
             }
         }).catch(err => {
             handleError(err)
-            setTimeout(() => {
-                messageApi.open({
-                    type: 'error',
-                    content: data,
-                    duration: 10,
-                });
-            }, 120)
         })
-
     }
+
+    useEffect(() => {
+        if (data !== '' && data?.length > 0) {
+            messageApi.open({
+                type: 'error',
+                content: data,
+                duration: 10,
+            });
+            handleError('')
+        }
+    }, [data])
 
     return (
         <>
@@ -56,7 +59,8 @@ export const Comment = ({comment, userId}) => {
                     <div className={'w-[92%] '}>
                         <div className={'flex '}>
                             {isEditing === false &&
-                            <div className={'flex gap-3 w-full min-h-[60px] bg-[#f2f2f2] px-[10px] py-[5px] rounded-tr-lg rounded-br-lg rounded-bl-lg'}>
+                            <div
+                                className={'flex gap-3 w-full min-h-[60px] bg-[#f2f2f2] px-[10px] py-[5px] rounded-tr-lg rounded-br-lg rounded-bl-lg'}>
                                 <p className={'w-[80%] text-[14px] text-justify '}>
                                     {comment.body}
                                 </p>

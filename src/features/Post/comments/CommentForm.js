@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {TO_CREATE_BASE_COMMENT, TO_EDIT, TO_CREATE_REPLY} from "../../../store/comment/types";
 import {onCreateComment, onUpdateComment} from "../../../api/CommentApi";
 import useErrorFormat from "../../../utility/custom-hooks/useErrorFormat";
@@ -9,7 +9,6 @@ import {updateComment, addComment, addCommentReply} from "../../../store/comment
 export const CommentForm = ({
                                 postId,
                                 btnLabel,
-                                handleSubmit,
                                 commentId,
                                 parentCommentId,
                                 actionType,
@@ -19,7 +18,7 @@ export const CommentForm = ({
     const dispatcher = useDispatch()
     const [text, setText] = useState(initialText)
     const isTextDisabled = text.length === 0
-    const [data, handleError] = useErrorFormat()
+    const [data, handleError] = useErrorFormat('')
     const [messageApi, contextHolder] = message.useMessage();
     const [processing, setProcessing] = useState(false)
     const onSubmit = e => {
@@ -35,13 +34,6 @@ export const CommentForm = ({
                 dispatcher(addComment(comment))
             }).catch(err => {
                 handleError(err)
-                setTimeout(() => {
-                    messageApi.open({
-                        type: 'error',
-                        content: data,
-                        duration: 10,
-                    });
-                }, 120)
             })
             setText('')
         } else if (actionType === TO_EDIT) {
@@ -57,16 +49,8 @@ export const CommentForm = ({
                 handleClose()
             }).catch(err => {
                 handleError(err)
-                setTimeout(() => {
-                    messageApi.open({
-                        type: 'error',
-                        content: data,
-                        duration: 10,
-                    });
-                }, 120)
             })
         } else if (actionType === TO_CREATE_REPLY) {
-            console.log(parentCommentId)
             if (!parentCommentId) {
                 messageApi.open({
                     type: 'error',
@@ -78,24 +62,25 @@ export const CommentForm = ({
             payload['parent_comment_id'] = parentCommentId
             onCreateComment(payload).then(resp => {
                 let comment = {...resp.data.data, open: false}
-                console.log("am her for it", comment)
                 dispatcher(addCommentReply(comment))
                 handleClose()
             }).catch(err => {
                 handleError(err)
-                setTimeout(() => {
-                    messageApi.open({
-                        type: 'error',
-                        content: data,
-                        duration: 10,
-                    });
-                }, 120)
             })
             setText('')
         }
-
         setProcessing(false)
     }
+    useEffect(() => {
+        if (data !== '' && data?.length  > 0) {
+            messageApi.open({
+                type: 'error',
+                content: data,
+                duration: 10,
+            });
+            handleError('')
+        }
+    }, [data])
     return (
         <>
             {contextHolder}
