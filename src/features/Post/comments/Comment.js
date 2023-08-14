@@ -17,6 +17,7 @@ export const Comment = ({comment, userId}) => {
     const canDelete = userId === comment.user_id
     const [isEditing, setIsEditing] = useState(false)
     const [isReplying, setIsReplying] = useState(false)
+    const [showFull, setShowFull] = useState(false)
     const handleClose = () => {
         setIsEditing(false)
     }
@@ -24,7 +25,6 @@ export const Comment = ({comment, userId}) => {
         setIsReplying(false)
     }
     const handleDelete = () => {
-        console.log('commentId', comment?.id)
         const isReply = comment?.parent_comment_id !== null
         onDeleteComment(comment.id).then(() => {
             if (isReply) {
@@ -50,15 +50,20 @@ export const Comment = ({comment, userId}) => {
             {contextHolder}
             <div className={'w-full py-[10px]'}>
                 <div className={'flex'}>
-                    <div className={'w-[10%]'}>
+                    <div className={'w-[8%]'}>
                         <div className={'w-10 h-10 bg-gray-300 rounded-full'}/>
                     </div>
-                    <div className={'w-[90%]'}>
-                        <div className={'flex gap-3'}>
+                    <div className={'w-[92%] '}>
+                        <div className={'flex '}>
                             {isEditing === false &&
-                            <p className={'w-[80%] text-justify'}>
-                                {comment.body}
-                            </p>
+                            <div className={'flex gap-3 w-full min-h-[60px] bg-[#f2f2f2] px-[10px] py-[5px] rounded-tr-lg rounded-br-lg rounded-bl-lg'}>
+                                <p className={'w-[80%] text-[14px] text-justify '}>
+                                    {comment.body}
+                                </p>
+                                <p className={'w-[20%] text-center'}>
+                                    {new Date(comment.timestamp).toLocaleDateString()}
+                                </p>
+                            </div>
                             }
                             {
                                 isEditing === true &&
@@ -75,9 +80,7 @@ export const Comment = ({comment, userId}) => {
                                     />
                                 </div>
                             }
-                            <p className={'w-[20%]'}>
-                                {new Date(comment.timestamp).toLocaleDateString()}
-                            </p>
+
                         </div>
                         <div className={'w-full flex divide-x gap-4 py-[15px]'} data-testid={'comment-action'}>
                             <div className={'pr-[5px]'}>
@@ -135,6 +138,17 @@ export const Comment = ({comment, userId}) => {
                         </div>
                         <div className={'w-full py-[10px] divide-y'}>
                             {
+                                showFull === false &&
+                                replies.splice(0, 2).map(reply => {
+                                    return <Comment
+                                        comment={reply}
+                                        key={reply.id}
+                                        userId={userId}
+                                    />
+                                })
+                            }
+                            {
+                                showFull === true &&
                                 replies.map(reply => {
                                     return <Comment
                                         comment={reply}
@@ -143,7 +157,27 @@ export const Comment = ({comment, userId}) => {
                                     />
                                 })
                             }
+
                         </div>
+                        {
+                            replies.length > 0 &&
+                            <div className={'w-full flex justify-end'}>
+                                {
+                                    showFull === false &&
+                                    <span className={'text-[13px] font-semibold text-italic cursor-pointer'}
+                                          onClick={() => setShowFull(true)}>
+                                        Show more
+                                    </span>
+                                }
+                                {
+                                    showFull === true &&
+                                    <span className={'text-[13px] font-semibold text-italic cursor-pointer'}
+                                          onClick={() => setShowFull(false)}>
+                                        Show less
+                                    </span>
+                                }
+                            </div>
+                        }
                         {isReplying === true &&
                         <div className={'w-full'}>
                             <CommentForm

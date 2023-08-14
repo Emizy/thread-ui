@@ -9,7 +9,6 @@ import {
 } from "./types";
 
 export const commentReducer = (state = commentState, action) => {
-    console.log("am", action)
     switch (action.type) {
         case SET_COMMENTS:
             return {
@@ -79,8 +78,23 @@ export const commentReducer = (state = commentState, action) => {
             }
         case DELETE_COMMENT_REPLY:
             let repliesCopy = JSON.parse(JSON.stringify(state.commentsReplies))
+            let deleteCommentCopy = JSON.parse(JSON.stringify(state.comments))
+            let deleteReplyTargetIndex = repliesCopy.findIndex(item => String(item.id) === String(action.commentId))
+            let deleteReplyTarget = repliesCopy[deleteReplyTargetIndex]
+            if (deleteReplyTarget.parent_comment_id) {
+                let parentDeleteReplyIndex = repliesCopy.findIndex(item => String(item.id) === String(deleteReplyTarget.parent_comment_id))
+                let deleteCommentReplyIndex = deleteCommentCopy.findIndex(item => String(item.id) === String(deleteReplyTarget.parent_comment_id))
+                if (deleteCommentReplyIndex > -1) {
+                    deleteCommentCopy[deleteCommentReplyIndex].total_replies -= 1
+                } else if (parentDeleteReplyIndex > -1) {
+                    repliesCopy[parentDeleteReplyIndex].total_replies -= 1
+                }
+            }
+            repliesCopy.splice(deleteReplyTargetIndex, 1)
             return {
-                ...state, commentsReplies: repliesCopy.filter(item => item.id !== action.commentId)
+                ...state,
+                commentsReplies: repliesCopy,
+                comments: deleteCommentCopy
             }
         default:
             return state
