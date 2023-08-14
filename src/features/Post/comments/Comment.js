@@ -15,14 +15,15 @@ export const Comment = ({comment, userId}) => {
     const [messageApi, contextHolder] = message.useMessage();
     const canEdit = userId === comment.user_id
     const canDelete = userId === comment.user_id
+    const [isCollapse, setIsCollapse] = useState(true)
     const [isEditing, setIsEditing] = useState(false)
     const [isReplying, setIsReplying] = useState(false)
-    const [showFull, setShowFull] = useState(false)
     const handleClose = () => {
         setIsEditing(false)
     }
     const handleReplyClose = () => {
         setIsReplying(false)
+        setIsCollapse(true)
     }
     const handleDelete = () => {
         const isReply = comment?.parent_comment_id !== null
@@ -64,7 +65,7 @@ export const Comment = ({comment, userId}) => {
                                 <p className={'w-[80%] text-[14px] text-justify '}>
                                     {comment.body}
                                 </p>
-                                <p className={'w-[20%] text-center'}>
+                                <p className={'w-[20%] text-center text-[14px] italic font-semibold'}>
                                     {new Date(comment.timestamp).toLocaleDateString()}
                                 </p>
                             </div>
@@ -138,48 +139,38 @@ export const Comment = ({comment, userId}) => {
                                 </ul>
                             </div>
                             }
+                            <div className={'pl-[10px]'}>
+                                <ul className={'flex gap-3 text-[12px] font-medium'}>
+                                    <li>
+                                        {isCollapse === false &&
+                                        <span className={'cursor-pointer'}
+                                              data-testid={`comment-collapse-${comment.id}`}
+                                              onClick={() => setIsCollapse(true)}>open thread</span>
+                                        }
+                                        {isCollapse === true &&
+                                        <span className={'cursor-pointer'}
+                                              data-testid={`comment-collapse-${comment.id}`}
+                                              onClick={() => setIsCollapse(false)}>close thread</span>
+                                        }
 
-                        </div>
-                        <div className={'w-full py-[10px] divide-y'}>
-                            {
-                                showFull === false &&
-                                replies.splice(0, 2).map(reply => {
-                                    return <Comment
-                                        comment={reply}
-                                        key={reply.id}
-                                        userId={userId}
-                                    />
-                                })
-                            }
-                            {
-                                showFull === true &&
-                                replies.map(reply => {
-                                    return <Comment
-                                        comment={reply}
-                                        key={reply.id}
-                                        userId={userId}
-                                    />
-                                })
-                            }
+                                    </li>
+                                </ul>
+                            </div>
 
                         </div>
                         {
-                            replies.length > 0 &&
-                            <div className={'w-full flex justify-end'}>
+                            isCollapse === true &&
+                            <div className={'w-full py-[10px] divide-y'}>
                                 {
-                                    showFull === false &&
-                                    <span className={'text-[13px] font-semibold text-italic cursor-pointer'}
-                                          onClick={() => setShowFull(true)}>
-                                        Show more
-                                    </span>
+                                    replies.map(reply => {
+                                        return <Comment
+                                            comment={reply}
+                                            key={reply.id}
+                                            userId={userId}
+                                        />
+                                    })
                                 }
-                                {
-                                    showFull === true &&
-                                    <span className={'text-[13px] font-semibold text-italic cursor-pointer'}
-                                          onClick={() => setShowFull(false)}>
-                                        Show less
-                                    </span>
-                                }
+
                             </div>
                         }
                         {isReplying === true &&
