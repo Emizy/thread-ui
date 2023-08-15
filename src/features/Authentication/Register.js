@@ -78,7 +78,7 @@ export const Register = ({onMessage}) => {
         setIsProcessing(false)
     }
     return (
-        <>
+        <div>
             <form className={'w-full py-[20px]'}>
                 <div className={'grid grid-cols-1 lg:grid-cols-2 gap-4'}>
                     <div className={'pb-[20px]'}>
@@ -140,6 +140,6 @@ export const Register = ({onMessage}) => {
                                         </span>
                 </div>
             </form>
-        </>
+        </div>
     )
 }

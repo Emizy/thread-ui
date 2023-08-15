@@ -5,7 +5,6 @@ export default function useErrorFormat(initial = '') {
     const [data, setData] = React.useState(initial)
 
     function handleError(error) {
-        console.log(error)
         try {
             if (error.length < 1) {
                 setData('')
@@ -40,9 +39,7 @@ export default function useErrorFormat(initial = '') {
                 }
             }
 
-        } catch (e) {
-            console.log(e)
-        }
+        } catch (e) {}
 
     }
 

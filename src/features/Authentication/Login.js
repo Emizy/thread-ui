@@ -62,7 +62,7 @@ export const Login = ({onMessage}) => {
         setIsProcessing(false)
     }
     return (
-        <>
+        <div>
             <form className={'w-full py-[20px] login-form'} onSubmit={(e) => onSubmit(e)} data-testid={'login-form'}>
                 <div className={'pb-[20px]'}>
                     <label className={'py-[15px] mb-[10px]'}>Email</label>
@@ -105,6 +105,6 @@ export const Login = ({onMessage}) => {
                                         </span>
                 </div>
             </form>
-        </>
+        </div>
     )
 }

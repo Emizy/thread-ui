@@ -8,7 +8,7 @@ import React from "react";
 const persist = persistStore(store)
 export const BaseIndexComponent = ({childComponent}) => {
     return (
-        <>
+        <div>
             <BrowserRouter>
                 <Provider store={store}>
                     <PersistGate persistor={persist}>
@@ -16,6 +16,6 @@ export const BaseIndexComponent = ({childComponent}) => {
                     </PersistGate>
                 </Provider>
             </BrowserRouter>
-        </>
+        </div>
     )
 }

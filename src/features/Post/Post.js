@@ -106,16 +106,16 @@ export const Post = () => {
         onFetchPost(`?limit=${TOTAL_DISPLAY_POST}`)
     }, [])
     return (
-        <>
+        <div>
             {contextHolder}
-            <div className={'w-full py-[30px]'}>
-                <div className={'w-[86%] mx-auto'}>
+            <div className={'w-full py-[30px]'} data-testid={'post-container'}>
+                <div className={'w-[86%] mx-auto'} id={'post-container-width'}>
                     <div className={'w-[60%] mx-auto'}>
                         <PostFilterTab onFilter={setTab} onSearch={setSearch}/>
 
                     </div>
                     <div className={'w-full py-[40px]'}>
-                        <div className={'grid grid-cols-1 lg:grid-cols-3 gap-[40px]'}>
+                        <div className={'grid grid-cols-1 lg:grid-cols-3 gap-[40px]'} data-testid={'post-grid-list'}>
 
                             {isLoading === true &&
                             [...Array(3)].map((_, key) => {
@@ -125,14 +125,17 @@ export const Post = () => {
 
                             {isLoading === false &&
                             postData?.posts?.map((blog, key) => {
-                                return <PostCard key={`blog-${key}`} post={blog}
-                                                 caption_count={244} title_count={70} onMessage={onMessage}
+                                return <PostCard key={`blog-${key}`}
+                                                 post={blog}
+                                                 caption_count={244}
+                                                 title_count={70}
+                                                 onMessage={onMessage}
                                                  handleEdit={handleEdit}/>
                             })
                             }
                         </div>
                         {postData?.posts?.length === 0 &&
-                        <div className={'w-full'}>
+                        <div className={'w-full'} data-testid={'post-empty-container'}>
                             <div className={'w-[50%] mx-auto'}>
                                 <EmptyComponent text={'No posts available'}/>
 
@@ -168,6 +171,6 @@ export const Post = () => {
             >
                 <EditPost post={currentPost} onMessage={onMessage} handleClear={handleClear}/>
             </Drawer>
-        </>
+        </div>
     )
 }

@@ -8,14 +8,14 @@ const MockComponent = () => {
         setStatus(false)
     }
     return (
-        <>
+        <div>
             {status === false && <span data-testid={'mock-component'}>
                 Mocked
             </span>}
             {
                 status && <Modal title={'Add Post'} setIsOpen={handleClose}/>
             }
-        </>
+        </div>
     )
 }
 const MockSmallComponent = () => {

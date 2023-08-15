@@ -1,6 +1,6 @@
 export const EmptyComponent = ({text}) => {
     return (
-        <>
+        <div>
             <div className={'flex gap-6 justify-center my-[15px]'}>
                             <span><svg width="24" height="24" className={'w-12 h-12'} viewBox="0 0 24 24" fill="none"
                                        xmlns="http://www.w3.org/2000/svg">
@@ -19,6 +19,6 @@ export const EmptyComponent = ({text}) => {
                         </svg></span>
                 <p className={'text-[15px] font-semibold mt-[15px]'} data-testid={'empty-text'}>{text}</p>
             </div>
-        </>
+        </div>
     )
 }

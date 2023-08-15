@@ -1,7 +1,7 @@
 import {render, screen, fireEvent, waitFor} from '@testing-library/react';
 import {BaseIndexComponent} from "../../../__test__/BaseIndexComponent";
 import {PostFilterTab} from "../PostFilterTab";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {act} from "react-dom/test-utils"
 import {testLogin} from "../../../store/mutation";
 import {useDispatch, useSelector} from "react-redux";

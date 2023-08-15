@@ -42,7 +42,7 @@ export const PostCard = ({post, title_count = 23, caption_count = 160, onMessage
     }, [data])
     return (
         <>
-            <div className={'h-[500px]'}>
+            <div className={'h-[500px]'} data-testid={'post-item'}>
                 <div className={'h-[250px] w-full'}>
                     <img src={post?.image} alt={'Blog post'} className={'h-[250px] w-full'}/>
                 </div>

@@ -3,7 +3,7 @@ import React from "react";
 export const Modal = ({title, width, setIsOpen, htmlBody}) => {
 
     return (
-        <>
+        <div>
             <div className={'centered'} data-testid={'modal-container'}>
                 <div className={'backdrop'} onClick={() => setIsOpen(false)}/>
                 <div className={`${width ? width : 'w-11/12 md:w-1/3'} modal modal-custom__dialog`}>
@@ -33,7 +33,7 @@ export const Modal = ({title, width, setIsOpen, htmlBody}) => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 
 }

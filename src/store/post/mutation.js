@@ -11,6 +11,7 @@ const setPosts = (payload) => {
         payload
     };
 };
+
 const addPost = (payload) => {
     return {
         type: ADD_POST,
@@ -30,5 +31,10 @@ const deletePost = (postId) => {
         postId
     };
 };
-
-export {setPosts, addPost, updatePost, deletePost}
+const testSetPosts = (payload) => {
+    return {
+        type: SET_POSTS,
+        payload
+    };
+};
+export {setPosts, addPost, updatePost, deletePost, testSetPosts}

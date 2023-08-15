@@ -26,7 +26,7 @@ export const Header = ({title}) => {
         dispatch(purgeAuth())
     }
     return (
-        <>
+        <div>
             <div className={'w-full h-[75px] hidden lg:block sticky'}>
                 <div className={'w-full h-full flex relative px-[102px]'}>
                     <div className={'w-[40%]'}>
@@ -98,6 +98,6 @@ export const Header = ({title}) => {
 
                 </div>
             </div>
-        </>
+        </div>
     )
 }
