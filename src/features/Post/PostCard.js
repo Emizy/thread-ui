@@ -48,12 +48,12 @@ export const PostCard = ({post, title_count = 23, caption_count = 160, onMessage
                 </div>
                 <div className={'w-full py-[10px]'}>
                     <div className={'w-full h-full lg:h-[72px]'}>
-                        <h4 className={'font-semibold text-[24px]'}>
+                        <h4 className={'font-semibold text-[24px]'} data-testid={'post-title'}>
                             {truncate(post?.title, title_count, '...')}
                         </h4>
                     </div>
                     <div className={'w-full h-[132px]'}>
-                        <p className={'font-normal py-[10px] text-[15px]'}>
+                        <p className={'font-normal py-[10px] text-[15px]'} data-testid={'post-description'}>
                             {truncate(post?.description, caption_count, '...')} <span
                             className={'text-[#007bff] text-italic cursor-pointer'}
                             onClick={() => goTo(`/blog/${post?.id}/${post?.slug}`)}>Read More</span>
@@ -65,7 +65,7 @@ export const PostCard = ({post, title_count = 23, caption_count = 160, onMessage
                                             <span className={'py-[10px]'}>
                                                 <SlCalender/>
                                             </span>
-                            <p className={'py-[6px]'}>
+                            <p className={'py-[6px]'} data-testid={'post-date'}>
                                 {moment(post?.created_at).format('DD-MM-YYYY')}
                             </p>
                         </div>
@@ -73,15 +73,16 @@ export const PostCard = ({post, title_count = 23, caption_count = 160, onMessage
                                             <span className={'py-[10px]'}>
                                                 <FaRegCommentAlt/>
                                             </span>
-                            <p className={'py-[6px]'}>
+                            <p className={'py-[6px]'} data-testid={'post-comment-count'}>
                                 Comment{post?.total_comments > 1 ? 's' : ''} ({post?.total_comments})
                             </p>
                         </div>
                         {canAction === true &&
-                        <div className={'flex gap-3 py-[10px]'}>
+                        <div className={'flex gap-3 py-[10px]'} data-testid={'post-actions'}>
                             <ul className={'flex gap-3'}>
                                 <li className={'pr-[5px]'}>
-                                    <span className={'cursor-pointer'} onClick={() => onEdit()}>
+                                    <span className={'cursor-pointer'} onClick={() => onEdit()}
+                                          data-testid={'post-edit-btn'}>
                                         <AiOutlineEdit className={'text-[#0371E0]'}/>
                                     </span>
                                 </li>
@@ -91,6 +92,7 @@ export const PostCard = ({post, title_count = 23, caption_count = 160, onMessage
                                         description="Are you sure to delete this post?"
                                         onConfirm={handleDelete}
                                         okText="Yes"
+                                        data-testid={'post-delete-confirm-btn'}
                                         cancelText="No"
                                     >
                                         <div className={'cursor-pointer'}>

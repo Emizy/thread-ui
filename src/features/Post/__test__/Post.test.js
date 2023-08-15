@@ -1,9 +1,7 @@
 import {render, screen, fireEvent, waitFor} from '@testing-library/react';
 import {BaseIndexComponent} from "../../../__test__/BaseIndexComponent";
-import React, {useEffect, useState} from "react";
 import {act} from "react-dom/test-utils"
-import {testLogin} from "../../../store/mutation";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {Post} from "../Post";
 import axios from "axios";
 import {cleanup} from "@testing-library/react";

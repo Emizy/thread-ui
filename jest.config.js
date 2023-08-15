@@ -6,7 +6,7 @@ module.exports = {
         '^axios$': require.resolve('axios'),
 
     },
-    transformIgnorePatterns: ['/node_modules/(?!(axios|antd)/)'],
+    transformIgnorePatterns: ['/node_modules/(?!(axios|antd|moment)/)'],
     moduleDirectories: ["node_modules", "src"],
     verbose: true,
     transform: {
