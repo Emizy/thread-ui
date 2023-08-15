@@ -27,7 +27,7 @@ const FormReducer = (state, action) => {
     }
 
 }
-export const AddPost = ({onMessage}) => {
+export const AddPost = ({onMessage,handleUpload}) => {
     const [data, handleError] = useErrorFormat('')
     const dispatcher = useDispatch()
     const [isProcessing, setIsProcessing] = useState(false)
@@ -53,6 +53,12 @@ export const AddPost = ({onMessage}) => {
                 return false
             }
 
+        },
+        customRequest: ({onSuccess}) => {
+            onSuccess('ok')
+            if (handleUpload){
+                handleUpload('uploaded')
+            }
         },
         fileList
     };
@@ -117,29 +123,40 @@ export const AddPost = ({onMessage}) => {
             <form className={'w-full py-[20px]'}>
                 <div className={'pb-[20px]'}>
                     <label className={'py-[15px] font-medium text-[15px] mb-[10px]'}>Title</label>
-                    <input type={'text'} value={state.title} max={200} required={true}
+                    <input type={'text'} value={state.title}
+                           placeholder={'title...'} max={200}
+                           required={true}
+                           data-testid={'title'}
                            onInput={(e) => dispatch({'type': 'update-title', 'value': e.target.value})}
                            className={'w-full mt-[10px]  rounded-[3px] h-[35px] px-[11px] text-[14px] border outline-none hover:outline-none'}/>
                 </div>
                 <div className={'pb-[20px]'}>
-                    <label className={'py-[15px] font-medium text-[15px]  mb-[10px]'}>Description</label>
-                    <textarea required={true} value={state.description}
+                    <label className={'py-[15px] font-medium text-[15px] mb-[10px]'}>Description</label>
+                    <textarea required={true}
+                              placeholder={'description...'}
+                              value={state.description}
+                              data-testid={'description'}
                               className={'w-full mt-[10px] min-h-[150px] border outline-none p-[10px] rounded-[3px]'}
                               onInput={(e) => dispatch({'type': 'update-description', 'value': e.target.value})}/>
                 </div>
                 <div className={'pb-[20px] flex gap-6'}>
                     <label className={'py-[15px] font-medium text-[15px] mb-[10px] w-[15%]'}>Publish Post </label>
                     <div className={'w-[70%]'}>
-                        <input onChange={(e) => dispatch({'type': 'update-publish', 'value': e.target.checked})}
-                               type={'checkbox'} className={'w-3 h-3 pl-[20px] mt-[19px]'}/>
+                        <input value={state.publish}
+                               onChange={(e) => dispatch({'type': 'update-publish', 'value': e.target.checked})}
+                               type={'checkbox'}
+                               className={'w-3 h-3 pl-[20px] mt-[19px]'}
+                               data-testid={'publish'}/>
                     </div>
                 </div>
                 <div className={'pb-[20px] flex gap-6'}>
                     <label className={'py-[5px] font-medium text-[15px] mb-[1px] w-[15%]'}>Image: </label>
                     <div className={'w-[70%]'}>
-                        <Upload {...fileProps} className={'w-[100%] custom-upload'} maxCount={1}>
-                            <div
-                                className={'w-[99%] px-[18px] py-[5px] text-center h-[36px] border rounded-[10px] bg-white'}>Click
+                        <Upload {...fileProps}
+                                className={'w-[100%] custom-upload'}
+                                maxCount={1}>
+                            <div data-testid={'upload-btn'}
+                                 className={'w-[99%] px-[18px] py-[5px] text-center h-[36px] border rounded-[10px] bg-white'}>Click
                                 to upload
                                 image
                             </div>
@@ -148,7 +165,9 @@ export const AddPost = ({onMessage}) => {
                 </div>
 
                 <div className={'pb-[20px]'}>
-                    <button type={'button'} onClick={(e) => onSubmit(e)}
+                    <button type={'button'}
+                            onClick={(e) => onSubmit(e)}
+                            data-testid={'submit'}
                             className={'w-full mt-[10px]  rounded-[5px] bg-[#0371E0] text-white h-[35px] text-center flex justify-center px-[10px] text-[15px] border outline-none hover:outline-none'}>
                         {isProcessing === false && <span className={'mt-[6px]'}>
                                            CREATE POST

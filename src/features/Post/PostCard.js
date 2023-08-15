@@ -69,14 +69,6 @@ export const PostCard = ({post, title_count = 23, caption_count = 160, onMessage
                                 {moment(post?.created_at).format('DD-MM-YYYY')}
                             </p>
                         </div>
-                        <div className={'flex gap-3'}>
-                                            <span className={'py-[10px]'}>
-                                                <FaRegCommentAlt/>
-                                            </span>
-                            <p className={'py-[6px]'} data-testid={'post-comment-count'}>
-                                Comment{post?.total_comments > 1 ? 's' : ''} ({post?.total_comments})
-                            </p>
-                        </div>
                         {canAction === true &&
                         <div className={'flex gap-3 py-[10px]'} data-testid={'post-actions'}>
                             <ul className={'flex gap-3'}>
