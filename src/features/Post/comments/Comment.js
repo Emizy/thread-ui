@@ -95,15 +95,15 @@ export const Comment = ({comment, userId}) => {
                                               onClick={() => setIsReplying(true)}>Reply</span>
                                     </li>
                                     {
-                                        comment.total_replies > 0 &&
+                                        replies.length > 0 &&
                                         <li>
                                             <div className={'w-1 h-1 mt-[6px] rounded-full bg-gray-300'}/>
                                         </li>
                                     }
                                     {
-                                        comment.total_replies > 0 &&
+                                        replies.length > 0 &&
                                         <li>
-                                            {comment.total_replies} {comment.total_replies > 1 ? 'Replies' : 'Reply'}
+                                            {replies.length} {replies.length > 1 ? 'Replies' : 'Reply'}
                                         </li>
                                     }
 

@@ -11,6 +11,9 @@ export const Comments = ({post, userId}) => {
     const commentData = useSelector(state => state.commentData)
     const fetchComment = () => {
         onListComment({postId: post?.id}).then(resp => {
+            resp.data.data.results.map(item=>{
+                item.total_replies = 0
+            })
             let comment_replies = resp.data.data.results.filter(item => item.parent_comment_id !== null)
             comment_replies.sort((a, b) =>
                 new Date(a?.timestamp).getTime() - new Date(b?.timestamp).getTime())

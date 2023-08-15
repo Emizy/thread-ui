@@ -8,7 +8,7 @@ import {useSelector} from "react-redux";
 
 
 export const PostDetail = () => {
-    const {global} = useSelector(state => state)
+    const global = useSelector(state => state.global)
     const {identifier} = useParams()
     const location = useLocation();
     const [post, setPost] = useState({})

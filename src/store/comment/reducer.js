@@ -28,20 +28,11 @@ export const commentReducer = (state = commentState, action) => {
             }
         case ADD_COMMENT_REPLY:
             let commentReplyCopy = JSON.parse(JSON.stringify(state.commentsReplies))
-            let parentCommentCopy = JSON.parse(JSON.stringify(state.comments))
             commentReplyCopy = [...commentReplyCopy, action.payload]
             commentReplyCopy.sort((a, b) => new Date(a?.timestamp).getTime() - new Date(b?.timestamp).getTime())
-            let parentIndex = parentCommentCopy.findIndex(item => String(item.id) === String(action.payload.parent_comment_id))
-            let parentReplyIndex = commentReplyCopy.findIndex(item => String(item.id) === String(action.payload.parent_comment_id))
-            if (parentIndex > -1) {
-                parentCommentCopy[parentIndex].total_replies += 1
-            } else if (parentReplyIndex > -1) {
-                commentReplyCopy[parentReplyIndex].total_replies += 1
-            }
 
             return {
                 ...state,
-                comments: parentCommentCopy,
                 commentsReplies: commentReplyCopy
             }
         case UPDATE_COMMENT:
@@ -78,23 +69,12 @@ export const commentReducer = (state = commentState, action) => {
             }
         case DELETE_COMMENT_REPLY:
             let repliesCopy = JSON.parse(JSON.stringify(state.commentsReplies))
-            let deleteCommentCopy = JSON.parse(JSON.stringify(state.comments))
             let deleteReplyTargetIndex = repliesCopy.findIndex(item => String(item.id) === String(action.commentId))
-            let deleteReplyTarget = repliesCopy[deleteReplyTargetIndex]
-            if (deleteReplyTarget.parent_comment_id) {
-                let parentDeleteReplyIndex = repliesCopy.findIndex(item => String(item.id) === String(deleteReplyTarget.parent_comment_id))
-                let deleteCommentReplyIndex = deleteCommentCopy.findIndex(item => String(item.id) === String(deleteReplyTarget.parent_comment_id))
-                if (deleteCommentReplyIndex > -1) {
-                    deleteCommentCopy[deleteCommentReplyIndex].total_replies -= 1
-                } else if (parentDeleteReplyIndex > -1) {
-                    repliesCopy[parentDeleteReplyIndex].total_replies -= 1
-                }
-            }
+
             repliesCopy.splice(deleteReplyTargetIndex, 1)
             return {
                 ...state,
                 commentsReplies: repliesCopy,
-                comments: deleteCommentCopy
             }
         default:
             return state
