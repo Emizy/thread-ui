@@ -5,6 +5,7 @@ import {Comments} from "./comments/Comments";
 import moment from "moment";
 import {SlCalender} from "react-icons/sl";
 import {useSelector} from "react-redux";
+import {PostCardShimmer} from "./PostCardShimmer";
 
 
 export const PostDetail = () => {
@@ -29,22 +30,50 @@ export const PostDetail = () => {
             <div className={'w-full py-[30px]'}>
                 <div className={'w-[50%] mx-auto'}>
                     <div className={'w-full'}>
-                        <h4 className={'text-[30px] py-[10px] leading-[36px] font-[700]'}>
-                            {post?.title}
-                        </h4>
+                        {
+                            !post?.title &&
+                            <div className={'py-[5px]'}>
+                                <h4 className={'text-[30px] mb-[5px] py-[10px] leading-[36px] font-[700] h-[2] w-full bg-gray-300 animate-pulse'}/>
+                                <h4 className={'text-[30px] mb-[5px] py-[10px] leading-[36px] font-[700] h-[2] w-[80%] bg-gray-300 animate-pulse'}/>
+                            </div>
+                        }
+                        {
+                            post?.title &&
+
+                            <h4 className={'text-[30px] py-[10px] leading-[36px] font-[700]'}>
+                                {post?.title}
+                            </h4>
+                        }
                     </div>
                     <div className={'w-full h-[300px]'}>
-                        <img src={post?.image} alt={post?.title} className={'h-full w-full'}/>
+                        {
+                            !post?.image && <div className={'w-full h-full bg-gray-300 animate-pulse'}/>
+                        }
+                        {
+                            post?.image && <img src={post?.image} alt={post?.title} className={'h-full w-full'}/>
+                        }
                     </div>
                     <div className={'flex gap-3'}>
                                             <span className={'py-[10px]'}>
                                                 <SlCalender className={'font-semibold text-black'}/>
                                             </span>
-                        <p className={'py-[6px] font-semibold'}>
-                            {moment(post?.created_at).format('MMMM Do, YYYY')}
-                        </p>
+                        {
+                            post?.created_at && <p className={'py-[6px] font-semibold'}>
+                                {moment(post?.created_at).format('MMMM Do, YYYY')}
+                            </p>
+                        }
+                        {
+                            !post?.created_at &&
+                            <p className={'py-[6px] font-semibold h-2 bg-gray-300 animate-pulse mt-[5px] w-[30%]'}/>
+                        }
                     </div>
                     <div className={'w-full'}>
+                        {!post?.description &&
+                        [...Array(3)].map((_, key) => {
+                            return <p key={`shimmer-${key}`}
+                                      className={'py-[6px] font-semibold h-2 bg-gray-300 animate-pulse mt-[5px] w-[80%]'}/>
+                        })
+                        }
                         <p className={'text-[18px] pt-[10px] pb-[40px] text-justify'}>
                             {post?.description}
                         </p>

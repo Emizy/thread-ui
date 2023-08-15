@@ -176,6 +176,7 @@ export const Comment = ({comment, userId}) => {
                         {isReplying === true &&
                         <div className={'w-full'}>
                             <CommentForm
+
                                 postId={comment?.post_id}
                                 btnLabel={'Reply'}
                                 commentId={comment?.id}

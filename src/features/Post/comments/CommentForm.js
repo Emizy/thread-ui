@@ -85,7 +85,7 @@ export const CommentForm = ({
         <>
             {contextHolder}
             <form onSubmit={(e) => onSubmit(e)}>
-                  <textarea
+                  <textarea autoFocus={true}
                       className={'w-full min-h-[40px] border text-[15px] font-medium outline-none p-[10px] rounded-[3px]'}
                       value={text}
                       onChange={(e) => setText(e.target.value)}

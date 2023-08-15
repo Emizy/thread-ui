@@ -24,8 +24,18 @@ export const Post = () => {
     const dispatcher = useDispatch()
     const [messageApi, contextHolder] = message.useMessage();
     const [isLoading, setIsLoading] = useState(true)
-    const onSearch = (search) => {
-        console.log(search)
+    // const onSearch = (search) => {
+    //     console.log(search)
+    // }
+    const onDelete = (e) => {
+        let query = `?limit=${TOTAL_DISPLAY_POST}&e=${e}`
+        if (tab === 'personal') {
+            query += `&user__id=${global?.user?.id}`
+        }
+        if (search) {
+            query += `&search=${search}`
+        }
+        onFetchPost(query)
     }
     const handleEdit = (post) => {
         setCurrentPost(JSON.parse(JSON.stringify(post)))
@@ -65,7 +75,7 @@ export const Post = () => {
     }
     useEffect(() => {
         setIsLoading(true)
-        let query = `?limit=${TOTAL_DISPLAY_POST}`
+        let query = `?limit=${TOTAL_DISPLAY_POST}&e=${new Date().getTime()}`
         if (tab === 'personal') {
             query += `&user__id=${global?.user?.id}`
         }
@@ -103,7 +113,7 @@ export const Post = () => {
         }
     }, [currentPost])
     useEffect(() => {
-        onFetchPost(`?limit=${TOTAL_DISPLAY_POST}`)
+        onFetchPost(`?limit=${TOTAL_DISPLAY_POST}&e=${new Date().getTime()}`)
     }, [])
     return (
         <div>
@@ -130,7 +140,7 @@ export const Post = () => {
                                                  caption_count={244}
                                                  title_count={70}
                                                  onMessage={onMessage}
-                                                 handleEdit={handleEdit}/>
+                                                 handleEdit={handleEdit} onDelete={onDelete}/>
                             })
                             }
                         </div>

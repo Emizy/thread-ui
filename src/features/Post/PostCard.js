@@ -1,5 +1,4 @@
 import {SlCalender} from "react-icons/sl";
-import {FaRegCommentAlt} from "react-icons/fa";
 import {truncate} from "../../utility/utils";
 import moment from "moment";
 import {Popconfirm} from "antd";
@@ -12,7 +11,7 @@ import {deletePostApi} from "../../api/Post";
 import useErrorFormat from "../../utility/custom-hooks/useErrorFormat";
 import {useEffect} from "react";
 
-export const PostCard = ({post, title_count = 23, caption_count = 160, onMessage, handleEdit}) => {
+export const PostCard = ({post, title_count = 23, caption_count = 160, onMessage, handleEdit, onDelete}) => {
     const global = useSelector(state => state.global)
     const dispatcher = useDispatch()
     const [data, handleError] = useErrorFormat('')
@@ -24,6 +23,7 @@ export const PostCard = ({post, title_count = 23, caption_count = 160, onMessage
     const handleDelete = () => {
         deletePostApi(post?.id).then(() => {
             dispatcher(deletePost(post?.id))
+            onDelete(`reload-${new Date().getTime()}`)
         }).catch(err => {
             handleError(err)
         })
