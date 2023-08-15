@@ -1,4 +1,4 @@
-import {useReducer, useState} from "react";
+import {useEffect, useReducer, useState} from "react";
 import {useDispatch} from "react-redux";
 import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import {BiLoaderCircle} from "react-icons/bi";
@@ -52,15 +52,18 @@ export const Login = ({onMessage}) => {
 
         }).catch(err => {
             handleError(err)
-            setTimeout(() => {
-                onMessage({
-                    type: 'error',
-                    message: data
-                })
-            }, 100)
         })
         setIsProcessing(false)
     }
+    useEffect(() => {
+        if (data !== '' && data?.length > 0) {
+            onMessage({
+                type: 'error',
+                message: data
+            })
+            handleError('')
+        }
+    }, [data])
     return (
         <div>
             <form className={'w-full py-[20px] login-form'} onSubmit={(e) => onSubmit(e)} data-testid={'login-form'}>

@@ -1,4 +1,4 @@
-import {useReducer, useState} from "react";
+import {useEffect, useReducer, useState} from "react";
 import {useDispatch} from "react-redux";
 import {FaRegEye, FaRegEyeSlash} from "react-icons/fa";
 import {BiLoaderCircle} from "react-icons/bi";
@@ -33,7 +33,7 @@ const FormReducer = (state, action) => {
 
 }
 export const Register = ({onMessage}) => {
-    const [data, handleError] = useErrorFormat()
+    const [data, handleError] = useErrorFormat('')
     const [state, dispatch] = useReducer(FormReducer, {
             first_name: '',
             last_name: '',
@@ -68,15 +68,18 @@ export const Register = ({onMessage}) => {
             }))
         }).catch(err => {
             handleError(err)
-            setTimeout(() => {
-                onMessage({
-                    type: 'error',
-                    message: data
-                })
-            }, 100)
         })
         setIsProcessing(false)
     }
+    useEffect(() => {
+        if (data !== '' && data?.length > 0) {
+            onMessage({
+                type: 'error',
+                message: data
+            })
+            handleError('')
+        }
+    }, [data])
     return (
         <div>
             <form className={'w-full py-[20px]'}>
@@ -108,7 +111,8 @@ export const Register = ({onMessage}) => {
                         {isOpen === true &&
                         <FaRegEyeSlash className={'cursor-pointer'} onClick={() => setIsOpen(false)}/>}
                                     </span>
-                    <input type={`${isOpen === true ? 'text' : 'password'}`} value={state.value} data-testid={'password'}
+                    <input type={`${isOpen === true ? 'text' : 'password'}`} value={state.value}
+                           data-testid={'password'}
                            onInput={(e) => dispatch({'type': 'update-password', 'value': e.target.value})}
                            className={'w-full mt-[10px] h-[35px] rounded-[3px] pl-[11px] pr-[31px] text-[14px] border outline-none hover:outline-none'}/>
                 </div>
