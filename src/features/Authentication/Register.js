@@ -83,20 +83,20 @@ export const Register = ({onMessage}) => {
                 <div className={'grid grid-cols-1 lg:grid-cols-2 gap-4'}>
                     <div className={'pb-[20px]'}>
                         <label className={'py-[15px] mb-[10px]'}>First Name</label>
-                        <input type={'text'} value={state.first_name}
+                        <input type={'text'} value={state.first_name} data-testid={'first-name'}
                                onInput={(e) => dispatch({'type': 'update-first-name', 'value': e.target.value})}
                                className={'w-full mt-[10px]  rounded-[3px] h-[35px] px-[11px] text-[14px] border outline-none hover:outline-none'}/>
                     </div>
                     <div className={'pb-[20px]'}>
                         <label className={'py-[15px] mb-[10px]'}>Last Name</label>
-                        <input type={'text'} value={state.last_name}
+                        <input type={'text'} value={state.last_name} data-testid={'last-name'}
                                onInput={(e) => dispatch({'type': 'update-last-name', 'value': e.target.value})}
                                className={'w-full mt-[10px]  rounded-[3px] h-[35px] px-[11px] text-[14px] border outline-none hover:outline-none'}/>
                     </div>
                 </div>
                 <div className={'pb-[20px]'}>
                     <label className={'py-[15px] mb-[10px]'}>Email</label>
-                    <input type={'email'} value={state.email}
+                    <input type={'email'} value={state.email} data-testid={'email'}
                            onInput={(e) => dispatch({'type': 'update-email', 'value': e.target.value})}
                            className={'w-full mt-[10px]  rounded-[3px] h-[35px] px-[11px] text-[14px] border outline-none hover:outline-none'}/>
                 </div>
@@ -108,18 +108,18 @@ export const Register = ({onMessage}) => {
                         {isOpen === true &&
                         <FaRegEyeSlash className={'cursor-pointer'} onClick={() => setIsOpen(false)}/>}
                                     </span>
-                    <input type={`${isOpen === true ? 'text' : 'password'}`} value={state.value}
+                    <input type={`${isOpen === true ? 'text' : 'password'}`} value={state.value} data-testid={'password'}
                            onInput={(e) => dispatch({'type': 'update-password', 'value': e.target.value})}
                            className={'w-full mt-[10px] h-[35px] rounded-[3px] pl-[11px] pr-[31px] text-[14px] border outline-none hover:outline-none'}/>
                 </div>
                 <div className={'pb-[20px]'}>
                     <label className={'py-[15px] mb-[10px]'}>Address</label>
-                    <input type={'text'} value={state.address}
+                    <input type={'text'} value={state.address} data-testid={'address'}
                            onInput={(e) => dispatch({'type': 'update-address', 'value': e.target.value})}
                            className={'w-full mt-[10px]  rounded-[3px] h-[35px] px-[11px] text-[14px] border outline-none hover:outline-none'}/>
                 </div>
                 <div className={'pb-[20px]'}>
-                    <button type={'submit'} onClick={(e) => onSubmit(e)} disabled={isProcessing}
+                    <button type={'submit'} onClick={(e) => onSubmit(e)} disabled={isProcessing} data-testid={'submit'}
                             className={'w-full mt-[10px]  rounded-[5px] bg-[#0371E0] text-white h-[35px] text-center flex justify-center px-[10px] text-[15px] border outline-none hover:outline-none'}>
                         {isProcessing === false && <span className={'mt-[6px]'}>
                                             Sign Up

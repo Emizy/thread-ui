@@ -38,7 +38,7 @@ export const Login = ({onMessage}) => {
                 return false
             }
         }
-        // setIsProcessing(true)
+        setIsProcessing(true)
         await onLogin(state).then(resp => {
             dispatch({'type': 'reset'})
             onMessage({
@@ -59,7 +59,7 @@ export const Login = ({onMessage}) => {
                 })
             }, 100)
         })
-        // setIsProcessing(false)
+        setIsProcessing(false)
     }
     return (
         <>
