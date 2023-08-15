@@ -43,9 +43,10 @@ const toggleEditPost = (payload) => {
         payload
     }
 }
-const testLogin = () => {
+const testLogin = (payload) => {
     return {
-        type: TEST_LOGIN
+        type: TEST_LOGIN,
+        payload
     }
 }
 export {toggleLogin, toggleRegister, setUpAuth, purgeAuth, toggleAddPost, toggleEditPost, testLogin};

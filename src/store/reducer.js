@@ -29,7 +29,7 @@ export const reducer = (state = appState, action) => {
             }
         case TEST_LOGIN:
             return {
-                ...state, isAuthenticated: 'LoggedIn'
+                ...state, ...action.payload
             }
         case TOGGLE_LOGIN:
             return {

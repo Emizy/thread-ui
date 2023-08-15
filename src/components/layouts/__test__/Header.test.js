@@ -21,7 +21,20 @@ const MockLoginComponent = () => {
     const global = useSelector(state => state.global)
     const dispatcher = useDispatch()
     const handleLogin = () => {
-        dispatcher(testLogin())
+        dispatcher(testLogin({
+            isAuthenticated: 'LoggedIn',
+            user: {
+                first_name: 'John',
+                last_name: 'Doe',
+                email: 'johndoe@gmail.com',
+                id: 1
+            },
+            token: {
+                access: 'test-access-token',
+                refresh: 'test-refresh-token',
+            }
+
+        }))
     }
     return (
         <>

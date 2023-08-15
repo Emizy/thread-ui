@@ -2,7 +2,7 @@ import {useState} from "react";
 import {useSelector} from "react-redux";
 
 export const PostFilterTab = ({onFilter, onSearch}) => {
-    const {global} = useSelector((state) => state)
+    const global = useSelector((state) => state.global)
     const [tab, setTab] = useState('all')
     const onChangeTab = (tab) => {
         setTab(tab)
@@ -14,7 +14,7 @@ export const PostFilterTab = ({onFilter, onSearch}) => {
                 <div className={'w-[60%]'}>
                     <ul className={'flex my-[7px]'}>
                         <li data-testid={'tab'} className={'px-[5px]'}>
-                            <button onClick={() => onChangeTab('all')}
+                            <button onClick={() => onChangeTab('all')} data-testid={'all'}
                                     className={`px-[20px] min-w-[60px] font-semibold  text-[15px] rounded-[40px] py-[10px] ${tab === 'all' ? 'bg-[#007bff] border text-white' : 'text-black'}`}>
                                 <p>All</p>
                             </button>
@@ -22,7 +22,7 @@ export const PostFilterTab = ({onFilter, onSearch}) => {
                         {
                             global.isAuthenticated === 'LoggedIn' &&
                             <li className={'px-[5px]'} data-testid={'tab'}>
-                                <button onClick={() => onChangeTab('personal')}
+                                <button onClick={() => onChangeTab('personal')} data-testid={'personal'}
                                         className={`px-[20px] min-w-[60px] font-semibold  text-[15px] rounded-[40px] py-[10px] ${tab === 'personal' ? 'bg-[#007bff] border text-white' : 'text-black'}`}>
                                     <p>My Post</p>
                                 </button>
@@ -43,7 +43,7 @@ export const PostFilterTab = ({onFilter, onSearch}) => {
                               fill="#1C274C"/>
                     </svg>
 
-                    <input onChange={(e) => onSearch(e.target.value)}
+                    <input onChange={(e) => onSearch(e.target.value)} data-testid={'search'} id={'test-iio'}
                            className={'w-[95%]  my-[7px] pl-[35px] py-[10px] h-[43px] bg-gray-200 border rounded-[40px] outline-none'}
                            placeholder={'Search...'}/>
                 </div>
